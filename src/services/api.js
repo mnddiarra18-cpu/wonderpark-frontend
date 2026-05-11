@@ -1,9 +1,11 @@
 import axios from 'axios';
 
+const API_URL = "https://wonderpark-backend-ajii.onrender.com/api";
+
 // Configuration axios
 const api = axios.create({
- baseURL: "https://wonderpark-backend.onrender.com/api/users",
-   headers: {
+  baseURL: API_URL,
+  headers: {
     'Content-Type': 'application/json',
   }
 });
