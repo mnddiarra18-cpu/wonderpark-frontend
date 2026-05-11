@@ -83,8 +83,8 @@ const Login = () => {
     } else if (user.role === 'comptable') {
       navigate('/dashboard/comptable');
     } else {
-      navigate('/reservation');
-    }
+  navigate('/mes-reservations');
+}
   } catch (error) {
     setLoading(false);
     setLoginError(

@@ -9,6 +9,7 @@ import Admin from './pages/Dashboard/Admin';
 import Gestionnaire from './pages/Dashboard/Gestionnaire';
 import Caissier from './pages/Dashboard/Caissier';
 import Comptable from './pages/Dashboard/Comptable';
+import MesReservations from './pages/MesReservations';
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
         <Route path="/dashboard/gestionnaire" element={<Gestionnaire />} />
         <Route path="/dashboard/caissier" element={<Caissier />} />
         <Route path="/dashboard/comptable" element={<Comptable />} />
+        <Route path="/mes-reservations"
+            element={<PrivateRoute element={<MesReservations />} />} />
       </Routes>
     </Router>
   );
