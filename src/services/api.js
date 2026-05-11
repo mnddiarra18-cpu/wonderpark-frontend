@@ -53,10 +53,10 @@ api.interceptors.response.use(
 // AUTHENTIFICATION
 // ==================
 export const authAPI = {
-  register: (data) => api.post('/register/', data),
-  login: (data) => api.post('/login/', data),
-  profile: () => api.get('/profile/'),
-  updateProfile: (data) => api.put('/profile/update/', data),
+   register: (data) => api.post('/users/register/', data),
+  login: (data) => api.post('/users/login/', data),
+  profile: () => api.get('/users/profile/'),
+  updateProfile: (data) => api.put('/users/profile/update/', data),
 };
 
 // ==================
