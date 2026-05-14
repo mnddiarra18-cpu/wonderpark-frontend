@@ -91,7 +91,6 @@ const Caissier = () => {
     { id: 'accueil', label: 'Tableau de bord', icon: '🏠' },
     { id: 'reservations', label: 'Réservations du jour', icon: '📅' },
     { id: 'encaissement', label: 'Encaissement', icon: '💵' },
-    { id: 'paiements', label: 'Paiements effectués', icon: '✅' },
   ];
 
   return (
@@ -312,68 +311,6 @@ const Caissier = () => {
                               </td>
                             </tr>
                           ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-
-              {/* PAIEMENTS EFFECTUÉS */}
-              <div className="card border-0 shadow-sm"
-                style={{ borderRadius: '15px' }}>
-                <div className="card-header bg-white py-3"
-                  style={{ borderRadius: '15px 15px 0 0' }}>
-                  <h6 className="fw-bold mb-0"
-                    style={{ color: colors.dark }}>
-                    ✅ Paiements effectués aujourd'hui
-                  </h6>
-                </div>
-                <div className="card-body p-0">
-                  <div className="table-responsive">
-                    <table className="table table-hover mb-0">
-                      <thead style={{ backgroundColor: '#F8F9FA' }}>
-                        <tr>
-                          <th>Référence</th>
-                          <th>Client</th>
-                          <th>Montant</th>
-                          <th>Méthode</th>
-                          <th>Statut</th>
-                          <th>Reçu</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {paiementsEffectues.length === 0 ? (
-                          <tr>
-                            <td colSpan="6" className="text-center
-                                                        text-muted py-3">
-                              Aucun paiement effectué
-                            </td>
-                          </tr>
-                        ) : (
-                          paiementsEffectues.map((paiement) => (
-                            <tr key={paiement.id}>
-                              <td className="fw-semibold text-muted">
-                                {paiement.reference}
-                              </td>
-                              <td>{paiement.client_nom}</td>
-                              <td className="fw-bold"
-                                style={{ color: colors.green }}>
-                                {parseFloat(paiement.montant || 0)
-                                  .toLocaleString()} F
-                              </td>
-                              <td>{paiement.methode_paiement}</td>
-                              <td>{getStatutBadge(paiement.statut)}</td>
-                              <td>
-                                <button
-                                  className="btn btn-sm btn-outline-primary"
-                                  style={{ borderRadius: '8px' }}
-                                  onClick={() => window.print()}>
-                                  🖨️
-                                </button>
-                              </td>
-                            </tr>
-                          ))
-                        )}
                       </tbody>
                     </table>
                   </div>
