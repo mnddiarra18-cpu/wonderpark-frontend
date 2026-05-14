@@ -92,7 +92,6 @@ const Caissier = () => {
     { id: 'reservations', label: 'Réservations du jour', icon: '📅' },
     { id: 'encaissement', label: 'Encaissement', icon: '💵' },
     { id: 'paiements', label: 'Paiements effectués', icon: '✅' },
-    { id: 'acomptes', label: 'Acomptes', icon: '💰' },
   ];
 
   return (
@@ -654,78 +653,7 @@ const Caissier = () => {
             </div>
           )}
 
-          {/* ACOMPTES */}
-          {activeMenu === 'acomptes' && (
-            <div>
-              <h4 className="fw-bold mb-4"
-                style={{ color: colors.dark }}>
-                💰 Gestion des Acomptes
-              </h4>
-              <div className="card border-0 shadow-sm p-4"
-                style={{ borderRadius: '15px' }}>
-                <h6 className="fw-bold mb-3">
-                  Enregistrer un acompte
-                </h6>
-                <div className="row g-3">
-                  <div className="col-md-6">
-                    <label className="form-label fw-semibold">
-                      Référence réservation
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="RES-2026-001"
-                      style={{ borderRadius: '10px' }}
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label fw-semibold">
-                      Montant acompte (F CFA)
-                    </label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      placeholder="Ex: 5000"
-                      style={{ borderRadius: '10px' }}
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label fw-semibold">
-                      Montant restant (F CFA)
-                    </label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      placeholder="Ex: 5000"
-                      style={{ borderRadius: '10px' }}
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label fw-semibold">
-                      Méthode de paiement
-                    </label>
-                    <select className="form-select"
-                      style={{ borderRadius: '10px' }}>
-                      <option>Espèces</option>
-                      <option>Orange Money</option>
-                      <option>Wave</option>
-                    </select>
-                  </div>
-                  <div className="col-12">
-                    <button
-                      className="btn fw-bold px-4 py-2"
-                      style={{
-                        backgroundColor: colors.primary,
-                        color: 'white',
-                        borderRadius: '10px'
-                      }}>
-                      💾 Enregistrer l'acompte
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          
 
         </div>
       </div>
