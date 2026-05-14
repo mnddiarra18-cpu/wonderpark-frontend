@@ -162,6 +162,11 @@ const Paiement = () => {
     <div className="card border-0 shadow-sm p-4 mb-4 text-start"
          style={{borderRadius: '15px'}}>
       <h6 className="fw-bold mb-3">🎫 Reçu de paiement</h6>
+      <p><strong>N° Réservation :</strong>{' '}
+  <span style={{color: colors.primary}}>
+    #{donnees.reservationId}
+  </span>
+</p>
       <p><strong>Formule :</strong> {formule}</p>
       <p><strong>Date :</strong> {date}</p>
       <p><strong>Créneau :</strong> {creneau}</p>
