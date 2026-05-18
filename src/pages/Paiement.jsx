@@ -102,8 +102,33 @@ const Paiement = () => {
     setErrors({ methode: 'Entrez un montant valide' });
     return;
   }
+
   setLoading(true);
+
   try {
+    // Paiement Wave : redirection vers l'app Wave
+    if (methodePaiement === 'wave') {
+      const response = await paiementAPI.initierWave({
+        reservation_id: donnees.reservationId,
+        montant: Number(montantPaye)
+      });
+
+      const { lien_wave, reference } = response.data;
+
+      // Sauvegarder les infos en attendant le retour
+      sessionStorage.setItem('pending_payment', JSON.stringify({
+        reservationId: donnees.reservationId,
+        montant: Number(montantPaye),
+        reference: reference,
+        methodePaiement: 'wave'
+      }));
+
+      // Ouvrir Wave
+      window.location.href = lien_wave;
+      return;
+    }
+
+    // Paiement Orange Money ou Carte
     await paiementAPI.creer({
       reservation_id: donnees.reservationId,
       methode_paiement: methodePaiement,
@@ -112,8 +137,10 @@ const Paiement = () => {
       is_acompte: Number(montantPaye) < montantTotal,
       numero_mobile: formData.numeroMobile || ''
     });
+
     setLoading(false);
     setSuccess(true);
+
   } catch (error) {
     setLoading(false);
     setErrors({
