@@ -133,6 +133,7 @@ export const comptableAPI = {
 export const caissierAPI = {
   reservationsDuJour: () => api.get('/reservations/toutes/'),
   encaisser: (data) => api.post('/paiements/creer/', data),
+  tousPaiements: () => api.get('/paiements/tous/'),
 };
 
 export default api;

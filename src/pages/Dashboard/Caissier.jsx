@@ -41,6 +41,7 @@ const Caissier = () => {
       // Recharger les réservations
       const response = await caissierAPI.reservationsDuJour();
       setReservationsDuJour(response.data);
+      setPaiementsEffectues(paiResponse.data);
     } catch (error) {
       alert('❌ Erreur: ' + (error.response?.data?.error || 'Erreur lors de l\'encaissement'));
     }
@@ -49,6 +50,7 @@ const Caissier = () => {
     const chargerReservations = async () => {
       try {
         const response = await caissierAPI.reservationsDuJour();
+        caissierAPI.tousPaiements()
         setReservationsDuJour(response.data);
       } catch (error) {
         console.error('Erreur:', error.response?.data);
@@ -202,9 +204,9 @@ const Caissier = () => {
                   },
                   {
                     titre: 'Paiements sur place',
-                    valeur: reservationsDuJour.filter(
-                      r => r.mode_paiement === 'sur_place'
-                    ).length,
+                    valeur: paiementsEffectues.filter(
+                      p => p.mode_paiement === 'sur_place'
+                    ).length,  // ← compte les paiements sur place effectués
                     icon: '💵',
                     couleur: colors.green
                   },
@@ -219,6 +221,7 @@ const Caissier = () => {
                   {
                     titre: 'Total encaissé',
                     valeur: `${paiementsEffectues
+                      .filter(p => p.statut === 'effectue')
                       .reduce((acc, p) => acc + parseFloat(p.montant || 0), 0)
                       .toLocaleString()} F`,
                     icon: '💰',
@@ -406,107 +409,107 @@ const Caissier = () => {
 
           {/* ENCAISSEMENT */}
           {activeMenu === 'encaissement' && (
-  <div>
-    <h4 className="fw-bold mb-4" style={{color: colors.dark}}>
-      💵 Encaissement sur place
-    </h4>
+            <div>
+              <h4 className="fw-bold mb-4" style={{ color: colors.dark }}>
+                💵 Encaissement sur place
+              </h4>
 
-    {encaissementSuccess && (
-      <div className="alert alert-success">
-        ✅ Paiement enregistré avec succès !
-      </div>
-    )}
-    {encaissementError && (
-      <div className="alert alert-danger">
-        ❌ {encaissementError}
-      </div>
-    )}
+              {encaissementSuccess && (
+                <div className="alert alert-success">
+                  ✅ Paiement enregistré avec succès !
+                </div>
+              )}
+              {encaissementError && (
+                <div className="alert alert-danger">
+                  ❌ {encaissementError}
+                </div>
+              )}
 
-    <div className="row justify-content-center">
-      <div className="col-md-7">
-        <div className="card border-0 shadow-sm p-4"
-             style={{borderRadius: '15px'}}>
-          <h6 className="fw-bold mb-4" style={{color: colors.dark}}>
-            Enregistrer un paiement sur place
-          </h6>
+              <div className="row justify-content-center">
+                <div className="col-md-7">
+                  <div className="card border-0 shadow-sm p-4"
+                    style={{ borderRadius: '15px' }}>
+                    <h6 className="fw-bold mb-4" style={{ color: colors.dark }}>
+                      Enregistrer un paiement sur place
+                    </h6>
 
-          <div className="mb-3">
-            <label className="form-label fw-semibold">
-              Numéro de réservation
-            </label>
-            <input
-              type="number"
-              className="form-control"
-              placeholder="Ex: 1"
-              value={encaissementData.reservation_id}
-              onChange={(e) => setEncaissementData({
-                ...encaissementData,
-                reservation_id: e.target.value
-              })}
-              style={{borderRadius: '10px'}}
-            />
-          </div>
+                    <div className="mb-3">
+                      <label className="form-label fw-semibold">
+                        Numéro de réservation
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="Ex: 1"
+                        value={encaissementData.reservation_id}
+                        onChange={(e) => setEncaissementData({
+                          ...encaissementData,
+                          reservation_id: e.target.value
+                        })}
+                        style={{ borderRadius: '10px' }}
+                      />
+                    </div>
 
-          <div className="mb-3">
-            <label className="form-label fw-semibold">
-              Méthode de paiement
-            </label>
-            <select
-              className="form-select"
-              value={encaissementData.methode_paiement}
-              onChange={(e) => setEncaissementData({
-                ...encaissementData,
-                methode_paiement: e.target.value
-              })}
-              style={{borderRadius: '10px'}}>
-              <option value="especes">Espèces</option>
-              <option value="orange_money">Orange Money</option>
-              <option value="wave">Wave</option>
-            </select>
-          </div>
+                    <div className="mb-3">
+                      <label className="form-label fw-semibold">
+                        Méthode de paiement
+                      </label>
+                      <select
+                        className="form-select"
+                        value={encaissementData.methode_paiement}
+                        onChange={(e) => setEncaissementData({
+                          ...encaissementData,
+                          methode_paiement: e.target.value
+                        })}
+                        style={{ borderRadius: '10px' }}>
+                        <option value="especes">Espèces</option>
+                        <option value="orange_money">Orange Money</option>
+                        <option value="wave">Wave</option>
+                      </select>
+                    </div>
 
-          <button
-            className="btn w-100 fw-bold py-3"
-            style={{
-              backgroundColor: colors.green,
-              color: 'white',
-              borderRadius: '15px'
-            }}
-            onClick={async () => {
-              if (!encaissementData.reservation_id) {
-                setEncaissementError('Entrez un numéro de réservation');
-                return;
-              }
-              try {
-                await caissierAPI.encaisser({
-                  reservation_id: parseInt(encaissementData.reservation_id),
-                  methode_paiement: encaissementData.methode_paiement,
-                  mode_paiement: 'sur_place'
-                });
-                setEncaissementSuccess(true);
-                setEncaissementError('');
-                setEncaissementData({
-                  reservation_id: '',
-                  methode_paiement: 'especes',
-                  mode_paiement: 'sur_place'
-                });
-                const response = await caissierAPI.reservationsDuJour();
-                setReservationsDuJour(response.data);
-              } catch (error) {
-                setEncaissementError(
-                  error.response?.data?.error ||
-                  'Erreur lors de l\'encaissement'
-                );
-                setEncaissementSuccess(false);
-              }
-            }}>
-            💵 Valider le paiement
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+                    <button
+                      className="btn w-100 fw-bold py-3"
+                      style={{
+                        backgroundColor: colors.green,
+                        color: 'white',
+                        borderRadius: '15px'
+                      }}
+                      onClick={async () => {
+                        if (!encaissementData.reservation_id) {
+                          setEncaissementError('Entrez un numéro de réservation');
+                          return;
+                        }
+                        try {
+                          await caissierAPI.encaisser({
+                            reservation_id: parseInt(encaissementData.reservation_id),
+                            methode_paiement: encaissementData.methode_paiement,
+                            mode_paiement: 'sur_place'
+                          });
+                          setEncaissementSuccess(true);
+                          setEncaissementError('');
+                          setEncaissementData({
+                            reservation_id: '',
+                            methode_paiement: 'especes',
+                            mode_paiement: 'sur_place'
+                          });
+                          const response = await caissierAPI.reservationsDuJour();
+                          setReservationsDuJour(response.data);
+                        } catch (error) {
+                          setEncaissementError(
+                            error.response?.data?.error ||
+                            'Erreur lors de l\'encaissement'
+                          );
+                          setEncaissementSuccess(false);
+                        }
+                      }}>
+                      💵 Valider le paiement
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* PAIEMENTS EFFECTUÉS */}
           {activeMenu === 'paiements' && (
@@ -590,7 +593,7 @@ const Caissier = () => {
             </div>
           )}
 
-          
+
 
         </div>
       </div>
