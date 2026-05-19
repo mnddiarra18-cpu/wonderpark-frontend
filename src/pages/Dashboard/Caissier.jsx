@@ -206,9 +206,10 @@ const Caissier = () => {
                   },
                   {
                     titre: 'Paiements sur place',
-                    valeur: paiementsEffectues.filter(
-                      p => p.mode_paiement === 'sur_place'
-                    ).length,  // ← compte les paiements sur place effectués
+                    valeur: `${paiementsEffectues
+                      .filter(p => p.mode_paiement === 'sur_place' && p.statut === 'effectue')
+                      .reduce((acc, p) => acc + parseFloat(p.montant || 0), 0)
+                      .toLocaleString()} F`,
                     icon: '💵',
                     couleur: colors.green
                   },
