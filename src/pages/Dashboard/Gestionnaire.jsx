@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from '../../assets/logo.png';
-import { gestionnaireAPI } from '../../services/api';
+import { gestionnaireAPI, reservationAPI } from '../../services/api';
 
 const Gestionnaire = () => {
   const navigate = useNavigate();
