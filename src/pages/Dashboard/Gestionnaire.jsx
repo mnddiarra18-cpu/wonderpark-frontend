@@ -51,7 +51,7 @@ const Gestionnaire = () => {
   };
   const handleModifierStatut = async (id, statut) => {
     try {
-      await reservationAPI.modifierStatut(id, statut);
+await gestionnaireAPI.modifierStatut(id, statut);  
       alert('✅ Statut modifié avec succès !');
       const response = await gestionnaireAPI.toutesReservations();
       setReservations(response.data);
@@ -63,7 +63,7 @@ const Gestionnaire = () => {
   const handleAnnuler = async (id) => {
     if (window.confirm('Voulez-vous vraiment annuler cette réservation ?')) {
       try {
-        await reservationAPI.modifierStatut(id, 'annulee');
+await gestionnaireAPI.modifierStatut(id, 'annulee');
         alert('✅ Réservation annulée !');
         const response = await gestionnaireAPI.toutesReservations();
         setReservations(response.data);
