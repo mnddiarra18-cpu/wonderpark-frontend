@@ -71,6 +71,18 @@ const Register = () => {
 
  const handleSubmit = async (e) => {
   e.preventDefault();
+ 
+
+  // Nettoyage des données
+  const donneesNettoyees = {
+    first_name: formData.prenom.trim(),
+    last_name: formData.nom.trim(),
+    email: formData.email.trim().toLowerCase(),
+    telephone: formData.telephone.trim().replace(/\s/g, ''),
+    password: formData.motDePasse,
+    confirm_password: formData.confirmMotDePasse
+  };
+  
   const newErrors = validate();
   if (Object.keys(newErrors).length > 0) {
     setErrors(newErrors);
