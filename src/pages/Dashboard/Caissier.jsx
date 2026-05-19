@@ -40,6 +40,7 @@ const Caissier = () => {
       alert('✅ Paiement encaissé avec succès !');
       // Recharger les réservations
       const response = await caissierAPI.reservationsDuJour();
+      const paiResponse = await caissierAPI.tousPaiements();
       setReservationsDuJour(response.data);
       setPaiementsEffectues(paiResponse.data);
     } catch (error) {
@@ -50,7 +51,8 @@ const Caissier = () => {
     const chargerReservations = async () => {
       try {
         const response = await caissierAPI.reservationsDuJour();
-        caissierAPI.tousPaiements()
+        const paiResponse = await caissierAPI.tousPaiements();
+        setPaiementsEffectues(paiResponse.data);
         setReservationsDuJour(response.data);
       } catch (error) {
         console.error('Erreur:', error.response?.data);
