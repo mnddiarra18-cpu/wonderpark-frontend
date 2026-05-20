@@ -1026,7 +1026,7 @@ const handleSubmit = async () => {
               </div>
             )}
 
-            {/* ÉTAPE 5 : CONFIRMATION PAIEMENT SUR PLACE */}
+            {/* ÉTAPE 5 : CONFIRMATION PAIEMENT  */}
             {etape === 5 && (
               <div className="text-center py-5">
                 <div style={{ fontSize: '5rem' }}>🎉</div>
