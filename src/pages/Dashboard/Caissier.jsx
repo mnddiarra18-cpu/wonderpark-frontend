@@ -327,109 +327,109 @@ const Caissier = () => {
 
           {/* RÉSERVATIONS DU JOUR */}
           {activeMenu === 'reservations' && (
-            <div>
-              <h4 className="fw-bold mb-4"
-                style={{ color: colors.dark }}>
-                📅 Réservations du jour
-              </h4>
-              <div className="card border-0 shadow-sm"
-                style={{ borderRadius: '15px' }}>
-                <div className="card-body p-0">
-                  <div className="table-responsive">
-                    <table className="table table-hover mb-0">
-                      <thead style={{ backgroundColor: '#F8F9FA' }}>
-                        <tr>
-                          <th>#</th>
-                          <th>Client</th>
-                          <th>Formule</th>
-                          <th>Enfants</th>
-                          <th>Accomp.</th>
-                          <th>Montant</th>
-                          <th>Statut</th>
-                          <th>Actions</th>
-                          <th>Paiement</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <td>
-                          {res.statut === 'confirmee' ? (
-                            <span>
-                              <span className="badge bg-info me-1">
-                                {res.mode_paiement === 'sur_place' ? '🏢 Sur place' : '💳 En ligne'}
-                              </span>
-                              <small className="d-block text-muted">
-                                {res.methode_paiement === 'especes' ? '💵 Espèces' :
-                                  res.methode_paiement === 'orange_money' ? '🟠 Orange Money' :
-                                    res.methode_paiement === 'wave' ? '🌊 Wave' :
-                                      res.methode_paiement === 'carte' ? '💳 CB' : ''}
-                              </small>
-                            </span>
-                          ) : (
-                            <span className="badge bg-warning text-dark">
-                              ⏳ En attente
-                            </span>
-                          )}
-                        </td>
-                        {reservationsDuJour.length === 0 ? (
-                          <tr>
-                            <td colSpan="8" className="text-center
-                                                        text-muted py-3">
-                              Aucune réservation
-                            </td>
-                          </tr>
-                        ) : (
-                          reservationsDuJour.map((res) => (
-                            <tr key={res.id}>
-                              <td>#{res.id}</td>
-                              <td className="fw-semibold">
-                                {res.client_nom}
-                              </td>
-                              <td>{res.formule_nom}</td>
-                              <td>{res.nombre_enfants}</td>
-                              <td>
-                                {res.nombre_accompagnateurs}
-                                <small className="text-success d-block">
-                                  🥤 Boisson offerte
-                                </small>
-                              </td>
-                              <td className="fw-bold"
-                                style={{ color: colors.primary }}>
-                                {parseFloat(res.montant_total || 0)
-                                  .toLocaleString()} F
-                              </td>
-                              <td>{getStatutBadge(res.statut)}</td>
-                              <td>
-                                {res.statut === 'en_attente' && (
-                                  <button
-                                    className="btn btn-sm fw-bold"
-                                    style={{
-                                      backgroundColor: colors.green,
-                                      color: 'white',
-                                      borderRadius: '8px'
-                                    }}>
-                                    💵 Encaisser
-                                  </button>
-                                )}
-                                {res.statut === 'confirmee' && (
-                                  <button
-                                    className="btn btn-sm btn-outline-primary"
-                                    style={{ borderRadius: '8px' }}
-                                    onClick={() => window.print()}>
-                                    🖨️ Reçu
-                                  </button>
-                                )}
-                              </td>
-                            </tr>
-                          ))
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
+  <div>
+    <h4 className="fw-bold mb-4" style={{ color: colors.dark }}>
+      📅 Réservations du jour
+    </h4>
+    <div className="card border-0 shadow-sm" style={{ borderRadius: '15px' }}>
+      <div className="card-body p-0">
+        <div className="table-responsive">
+          <table className="table table-hover mb-0">
+            <thead style={{ backgroundColor: '#F8F9FA' }}>
+              <tr>
+                <th>#</th>
+                <th>Client</th>
+                <th>Formule</th>
+                <th>Enfants</th>
+                <th>Accomp.</th>
+                <th>Montant</th>
+                <th>Statut</th>
+                <th>Paiement</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reservationsDuJour.length === 0 ? (
+                <tr>
+                  <td colSpan="9" className="text-center text-muted py-3">
+                    Aucune réservation
+                  </td>
+                </tr>
+              ) : (
+                reservationsDuJour.map((res) => (
+                  <tr key={res.id}>
+                    <td>#{res.id}</td>
+                    <td className="fw-semibold">{res.client_nom}</td>
+                    <td>{res.formule_nom}</td>
+                    <td>{res.nombre_enfants}</td>
+                    <td>
+                      {res.nombre_accompagnateurs}
+                      <small className="text-success d-block">
+                        🥤 Boisson offerte
+                      </small>
+                    </td>
+                    <td className="fw-bold" style={{ color: colors.primary }}>
+                      {parseFloat(res.montant_total || 0).toLocaleString()} F
+                    </td>
+                    <td>{getStatutBadge(res.statut)}</td>
+                    <td>
+                      {res.statut === 'confirmee' ? (
+                        <span>
+                          <span className="badge bg-info me-1">
+                            {res.mode_paiement === 'sur_place'
+                              ? '🏢 Sur place'
+                              : '💳 En ligne'}
+                          </span>
+                          <small className="d-block text-muted">
+                            {res.methode_paiement === 'especes'
+                              ? '💵 Espèces'
+                              : res.methode_paiement === 'orange_money'
+                              ? '🟠 Orange Money'
+                              : res.methode_paiement === 'wave'
+                              ? '🌊 Wave'
+                              : res.methode_paiement === 'carte'
+                              ? '💳 CB'
+                              : ''}
+                          </small>
+                        </span>
+                      ) : (
+                        <span className="badge bg-warning text-dark">
+                          ⏳ En attente
+                        </span>
+                      )}
+                    </td>
+                    <td>
+                      {res.statut === 'en_attente' && (
+                        <button
+                          className="btn btn-sm fw-bold"
+                          style={{
+                            backgroundColor: colors.green,
+                            color: 'white',
+                            borderRadius: '8px'
+                          }}
+                          onClick={() => handleEncaisser(res.id, res.montant_total)}>
+                          💵 Encaisser
+                        </button>
+                      )}
+                      {res.statut === 'confirmee' && (
+                        <button
+                          className="btn btn-sm btn-outline-primary"
+                          style={{ borderRadius: '8px' }}
+                          onClick={() => window.print()}>
+                          🖨️ Reçu
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
           {/* ENCAISSEMENT */}
           {activeMenu === 'encaissement' && (
             <div>
