@@ -6,6 +6,7 @@ import wavelogo from '../assets/paiement/wave.webp';
 import orangeMoneyLogo from '../assets/paiement/orangemoney.webp';
 import { paiementAPI } from '../services/api';
 import { reservationAPI } from '../services/api';
+import { QRCodeSVG } from 'qrcode.react';
 
 const Paiement = () => {
   const navigate = useNavigate();
@@ -68,6 +69,8 @@ const Paiement = () => {
     cvv: '',
     numeroMobile: ''
   });
+const [waveModal, setWaveModal] = useState(false);
+const [waveLien, setWaveLien] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -106,27 +109,30 @@ const Paiement = () => {
   setLoading(true);
 
   try {
-    // Paiement Wave : redirection vers l'app Wave
+    // Paiement Wave 
     if (methodePaiement === 'wave') {
-      const response = await paiementAPI.initierWave({
-        reservation_id: donnees.reservationId,
-        montant: Number(montantPaye)
-      });
-
-      const { lien_wave, reference } = response.data;
-
-      // Sauvegarder les infos en attendant le retour
-      sessionStorage.setItem('pending_payment', JSON.stringify({
-        reservationId: donnees.reservationId,
-        montant: Number(montantPaye),
-        reference: reference,
-        methodePaiement: 'wave'
-      }));
-
-      // Ouvrir Wave
-      window.location.href = lien_wave;
-      return;
-    }
+  setLoading(true);
+  try {
+    const response = await paiementAPI.initierWave({
+      reservation_id: donnees.reservationId,
+      montant: Number(montantPaye)
+    });
+    
+    // Lien Wave avec numéro Wonderpark
+    const numeroWave = '221783015252';
+    const lien = `https://wave.com/out/pay?amount=${Number(montantPaye)}&to=${numeroWave}&note=Wonderpark-Ref-${response.data.reference}`;
+    setWaveLien(lien);
+    setLoading(false);
+    setWaveModal(true);
+  } catch (error) {
+    setLoading(false);
+    setErrors({
+      methode: error.response?.data?.error ||
+        'Erreur lors de l\'initiation Wave'
+    });
+  }
+  return;
+}
 
     // Paiement Orange Money ou Carte
     await paiementAPI.creer({
@@ -572,7 +578,128 @@ const Paiement = () => {
         </div>
       </div>
     </div>
+{/* MODAL WAVE */}
+{waveModal && (
+  <div style={{
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    zIndex: 9999,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '20px'
+  }}>
+    <div className="card border-0 shadow-lg p-4 text-center"
+         style={{
+           borderRadius: '20px',
+           maxWidth: '400px',
+           width: '100%',
+           backgroundColor: 'white'
+         }}>
 
+      {/* TITRE */}
+      <h4 className="fw-bold mb-3"
+          style={{color: '#1DC8FF'}}>
+        Paiement Wave
+      </h4>
+
+      {/* DESCRIPTION */}
+      <p className="text-muted mb-1">
+        Le paiement est en cours de traitement.
+        Vous allez recevoir un SMS pour confirmation.
+      </p>
+
+      <p className="mb-3">
+        ou{' '}
+        <a href={waveLien}
+           target="_blank"
+           rel="noopener noreferrer"
+           className="fw-bold"
+           style={{
+             color: '#1DC8FF',
+             textDecoration: 'underline'
+           }}>
+          Cliquer sur ce lien
+        </a>
+        {' '}ou scanner le QR Code pour valider le paiement
+      </p>
+
+      {/* QR CODE */}
+      <div className="d-flex justify-content-center mb-4">
+        <div style={{
+          padding: '15px',
+          backgroundColor: 'white',
+          borderRadius: '15px',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+        }}>
+          <QRCodeSVG
+            value={waveLien}
+            size={200}
+            fgColor="#1DC8FF"
+            bgColor="white"
+            level="H"
+            includeMargin={true}
+          />
+        </div>
+      </div>
+
+      {/* MONTANT */}
+      <div className="p-3 mb-4 rounded"
+           style={{
+             backgroundColor: '#1DC8FF15',
+             border: '1px solid #1DC8FF30'
+           }}>
+        <small className="text-muted d-block">
+          Montant à payer
+        </small>
+        <span className="fw-bold fs-5"
+              style={{color: '#1DC8FF'}}>
+          {Number(montantPaye).toLocaleString()} F CFA
+        </span>
+      </div>
+
+      {/* BOUTONS */}
+      <div className="d-flex gap-3">
+        <button
+          className="btn fw-bold flex-fill py-2"
+          style={{
+            backgroundColor: '#1DC8FF',
+            color: 'white',
+            borderRadius: '10px'
+          }}
+          onClick={() => {
+            window.open(waveLien, '_blank');
+          }}>
+          Ouvrir Wave
+        </button>
+        <button
+          className="btn fw-bold flex-fill py-2"
+          style={{
+            backgroundColor: colors.green,
+            color: 'white',
+            borderRadius: '10px'
+          }}
+          onClick={() => {
+            setWaveModal(false);
+            setSuccess(true);
+          }}>
+          ✅ Confirmer
+        </button>
+      </div>
+
+      <button
+        className="btn btn-link mt-2 text-muted small"
+        onClick={() => setWaveModal(false)}>
+        Annuler
+      </button>
+
+    </div>
+  </div>
+)}
       {/* FOOTER */ }
   <footer className="py-3 text-white text-center"
     style={{ backgroundColor: colors.dark }}>
