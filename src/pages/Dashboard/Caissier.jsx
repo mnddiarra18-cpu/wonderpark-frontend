@@ -347,9 +347,29 @@ const Caissier = () => {
                           <th>Montant</th>
                           <th>Statut</th>
                           <th>Actions</th>
+                          <th>Paiement</th>
                         </tr>
                       </thead>
                       <tbody>
+                        <td>
+                          {res.statut === 'confirmee' ? (
+                            <span>
+                              <span className="badge bg-info me-1">
+                                {res.mode_paiement === 'sur_place' ? '🏢 Sur place' : '💳 En ligne'}
+                              </span>
+                              <small className="d-block text-muted">
+                                {res.methode_paiement === 'especes' ? '💵 Espèces' :
+                                  res.methode_paiement === 'orange_money' ? '🟠 Orange Money' :
+                                    res.methode_paiement === 'wave' ? '🌊 Wave' :
+                                      res.methode_paiement === 'carte' ? '💳 CB' : ''}
+                              </small>
+                            </span>
+                          ) : (
+                            <span className="badge bg-warning text-dark">
+                              ⏳ En attente
+                            </span>
+                          )}
+                        </td>
                         {reservationsDuJour.length === 0 ? (
                           <tr>
                             <td colSpan="8" className="text-center
