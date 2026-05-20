@@ -144,8 +144,10 @@ const Paiement = () => {
     }
   };
 
-  const waveUrl = `wave://send?to=783015252&amount=${Number(montantPaye)}`;
-
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const waveUrl = isMobile
+    ? `wave://send?to=783015252&amount=${Number(montantPaye)}`
+    : `https://www.wave.com/`;
   return (
     <div style={{
       minHeight: '100vh',
@@ -156,10 +158,10 @@ const Paiement = () => {
 
       {/* NAVBAR */}
       <nav className="navbar navbar-dark shadow"
-           style={{backgroundColor: colors.dark}}>
+        style={{ backgroundColor: colors.dark }}>
         <div className="container">
           <Link className="navbar-brand" to="/">
-            <img src={logo} alt="Wonderpark" height="50"/>
+            <img src={logo} alt="Wonderpark" height="50" />
           </Link>
           <span className="text-white fw-semibold">
             💳 Paiement sécurisé
@@ -173,20 +175,20 @@ const Paiement = () => {
 
             {success ? (
               <div className="text-center py-5">
-                <div style={{fontSize: '5rem'}}>✅</div>
+                <div style={{ fontSize: '5rem' }}>✅</div>
                 <h3 className="fw-bold mt-3 mb-2"
-                    style={{color: colors.green}}>
+                  style={{ color: colors.green }}>
                   Paiement effectué !
                 </h3>
                 <p className="text-muted mb-4">
                   Votre paiement a bien été enregistré.
                 </p>
                 <div className="card border-0 shadow-sm p-4 mb-4 text-start"
-                     style={{borderRadius: '15px'}}>
+                  style={{ borderRadius: '15px' }}>
                   <h6 className="fw-bold mb-3">🎫 Reçu de paiement</h6>
                   <p>
                     <strong>N° Réservation :</strong>{' '}
-                    <span style={{color: colors.primary}}>
+                    <span style={{ color: colors.primary }}>
                       #{donnees.reservationId}
                     </span>
                   </p>
@@ -199,26 +201,26 @@ const Paiement = () => {
                     {nombreAccompagnateurs}
                     {' '}(boisson offerte pour tous ✅)
                   </p>
-                  <hr/>
+                  <hr />
                   <p>
                     <strong>Montant total :</strong>{' '}
                     {montantTotal.toLocaleString()} F CFA
                   </p>
                   <p>
                     <strong>Montant payé :</strong>{' '}
-                    <span style={{color: colors.green}}>
+                    <span style={{ color: colors.green }}>
                       {Number(montantPaye).toLocaleString()} F CFA
                     </span>
                   </p>
                   {Number(montantPaye) < montantTotal && (
                     <div className="p-3 mt-2"
-                         style={{
-                           backgroundColor: `${colors.primary}15`,
-                           border: `1px solid ${colors.primary}30`,
-                           borderRadius: '10px'
-                         }}>
+                      style={{
+                        backgroundColor: `${colors.primary}15`,
+                        border: `1px solid ${colors.primary}30`,
+                        borderRadius: '10px'
+                      }}>
                       <p className="mb-0 fw-bold"
-                         style={{color: colors.primary}}>
+                        style={{ color: colors.primary }}>
                         ⚠️ Reste à payer sur place :{' '}
                         {(montantTotal - Number(montantPaye))
                           .toLocaleString()} F CFA
@@ -230,19 +232,19 @@ const Paiement = () => {
                   )}
                   {Number(montantPaye) >= montantTotal && (
                     <p className="fw-bold mb-0"
-                       style={{color: colors.green}}>
+                      style={{ color: colors.green }}>
                       ✅ Paiement intégral effectué
                     </p>
                   )}
                 </div>
                 <div className="d-flex gap-3 justify-content-center">
                   <Link to="/"
-                        className="btn fw-bold px-4 py-2"
-                        style={{
-                          backgroundColor: colors.primary,
-                          color: 'white',
-                          borderRadius: '15px'
-                        }}>
+                    className="btn fw-bold px-4 py-2"
+                    style={{
+                      backgroundColor: colors.primary,
+                      color: 'white',
+                      borderRadius: '15px'
+                    }}>
                     🏠 Accueil
                   </Link>
                   <button
@@ -260,18 +262,18 @@ const Paiement = () => {
             ) : (
               <div>
                 <h4 className="fw-bold mb-4 text-center"
-                    style={{color: colors.dark}}>
+                  style={{ color: colors.dark }}>
                   💳 Finaliser le paiement
                 </h4>
 
                 {/* RÉCAPITULATIF */}
                 <div className="card border-0 shadow-sm p-3 mb-4"
-                     style={{
-                       borderRadius: '15px',
-                       borderLeft: `5px solid ${colors.primary}`
-                     }}>
+                  style={{
+                    borderRadius: '15px',
+                    borderLeft: `5px solid ${colors.primary}`
+                  }}>
                   <h6 className="fw-bold mb-3"
-                      style={{color: colors.dark}}>
+                    style={{ color: colors.dark }}>
                     📋 Récapitulatif
                   </h6>
                   <div className="row g-2 mb-2">
@@ -302,7 +304,7 @@ const Paiement = () => {
                       </p>
                     </div>
                   </div>
-                  <hr className="my-2"/>
+                  <hr className="my-2" />
                   <div className="mb-1 d-flex justify-content-between">
                     <small className="text-muted">
                       Formule x {nombreEnfants} enfant(s)
@@ -329,12 +331,12 @@ const Paiement = () => {
                       </small>
                     </div>
                   )}
-                  <hr className="my-2"/>
+                  <hr className="my-2" />
                   <div className="d-flex justify-content-between
                                   align-items-center">
                     <span className="fw-bold fs-6">Total à payer</span>
                     <span className="fw-bold fs-5"
-                          style={{color: colors.primary}}>
+                      style={{ color: colors.primary }}>
                       {montantTotal.toLocaleString()} F CFA
                     </span>
                   </div>
@@ -342,9 +344,9 @@ const Paiement = () => {
 
                 {/* MONTANT À PAYER */}
                 <div className="card border-0 shadow-sm p-3 mb-4"
-                     style={{borderRadius: '15px'}}>
+                  style={{ borderRadius: '15px' }}>
                   <h6 className="fw-bold mb-3"
-                      style={{color: colors.dark}}>
+                    style={{ color: colors.dark }}>
                     💰 Montant à payer
                   </h6>
                   <div className="mb-3">
@@ -362,7 +364,7 @@ const Paiement = () => {
                         const val = Number(e.target.value);
                         setMontantPaye(val > montantTotal ? montantTotal : val);
                       }}
-                      style={{borderRadius: '10px'}}
+                      style={{ borderRadius: '10px' }}
                     />
                     <small className="text-muted mt-1 d-block">
                       Vous pouvez payer en totalité ou un montant partiel
@@ -370,17 +372,16 @@ const Paiement = () => {
                   </div>
                   {montantPaye > 0 && (
                     <div className="p-3 rounded"
-                         style={{
-                           backgroundColor: montantPaye >= montantTotal
-                             ? `${colors.green}15`
-                             : `${colors.primary}15`,
-                           borderRadius: '10px',
-                           border: `1px solid ${
-                             montantPaye >= montantTotal
-                               ? colors.green
-                               : colors.primary
-                           }30`
-                         }}>
+                      style={{
+                        backgroundColor: montantPaye >= montantTotal
+                          ? `${colors.green}15`
+                          : `${colors.primary}15`,
+                        borderRadius: '10px',
+                        border: `1px solid ${montantPaye >= montantTotal
+                            ? colors.green
+                            : colors.primary
+                          }30`
+                      }}>
                       <div className="d-flex justify-content-between mb-1">
                         <small className="fw-semibold">Montant total</small>
                         <small className="fw-bold">
@@ -390,7 +391,7 @@ const Paiement = () => {
                       <div className="d-flex justify-content-between mb-1">
                         <small className="fw-semibold">Vous payez</small>
                         <small className="fw-bold"
-                               style={{color: colors.green}}>
+                          style={{ color: colors.green }}>
                           {Number(montantPaye).toLocaleString()} F CFA
                         </small>
                       </div>
@@ -400,7 +401,7 @@ const Paiement = () => {
                             Reste à payer sur place
                           </small>
                           <small className="fw-bold"
-                                 style={{color: colors.secondary}}>
+                            style={{ color: colors.secondary }}>
                             {(montantTotal - Number(montantPaye))
                               .toLocaleString()} F CFA
                           </small>
@@ -409,7 +410,7 @@ const Paiement = () => {
                       {Number(montantPaye) >= montantTotal && (
                         <div className="text-center mt-1">
                           <small className="fw-bold"
-                                 style={{color: colors.green}}>
+                            style={{ color: colors.green }}>
                             ✅ Paiement intégral
                           </small>
                         </div>
@@ -420,7 +421,7 @@ const Paiement = () => {
 
                 <form onSubmit={handleSubmit}>
                   <h6 className="fw-bold mb-3"
-                      style={{color: colors.dark}}>
+                    style={{ color: colors.dark }}>
                     Choisissez votre méthode de paiement
                   </h6>
 
@@ -444,13 +445,13 @@ const Paiement = () => {
                               : '2px solid #eee',
                             backgroundColor:
                               methodePaiement === methode.id
-                              ? `${methode.couleur}15`
-                              : 'white',
+                                ? `${methode.couleur}15`
+                                : 'white',
                             transition: 'all 0.2s'
                           }}
                           onClick={() => {
                             setMethodePaiement(methode.id);
-                            setErrors({...errors, methode: ''});
+                            setErrors({ ...errors, methode: '' });
                           }}>
                           {methode.logo ? (
                             <img
@@ -469,7 +470,7 @@ const Paiement = () => {
                             </div>
                           )}
                           <small className="fw-bold d-block"
-                                 style={{color: methode.couleur}}>
+                            style={{ color: methode.couleur }}>
                             {methode.nom}
                           </small>
                         </div>
@@ -480,13 +481,13 @@ const Paiement = () => {
                   {/* FORMULAIRE ORANGE MONEY */}
                   {methodePaiement === 'orange_money' && (
                     <div className="card border-0 shadow-sm p-4 mb-4"
-                         style={{borderRadius: '15px'}}>
+                      style={{ borderRadius: '15px' }}>
                       <h6 className="fw-bold mb-3">
                         📱 Numéro de téléphone
                       </h6>
                       <div className="input-group">
                         <span className="input-group-text"
-                              style={{borderRadius: '10px 0 0 10px'}}>
+                          style={{ borderRadius: '10px 0 0 10px' }}>
                           +221
                         </span>
                         <input
@@ -496,7 +497,7 @@ const Paiement = () => {
                           placeholder="77 000 00 00"
                           value={formData.numeroMobile}
                           onChange={handleChange}
-                          style={{borderRadius: '0 10px 10px 0'}}
+                          style={{ borderRadius: '0 10px 10px 0' }}
                         />
                         {errors.numeroMobile && (
                           <div className="invalid-feedback">
@@ -514,7 +515,7 @@ const Paiement = () => {
                   {/* FORMULAIRE CARTE BANCAIRE */}
                   {methodePaiement === 'carte' && (
                     <div className="card border-0 shadow-sm p-4 mb-4"
-                         style={{borderRadius: '15px'}}>
+                      style={{ borderRadius: '15px' }}>
                       <h6 className="fw-bold mb-3">
                         💳 Informations de la carte
                       </h6>
@@ -530,7 +531,7 @@ const Paiement = () => {
                           maxLength="19"
                           value={formData.numeroCarte}
                           onChange={handleChange}
-                          style={{borderRadius: '10px'}}
+                          style={{ borderRadius: '10px' }}
                         />
                         {errors.numeroCarte && (
                           <div className="invalid-feedback">
@@ -549,7 +550,7 @@ const Paiement = () => {
                           placeholder="PRENOM NOM"
                           value={formData.nomCarte}
                           onChange={handleChange}
-                          style={{borderRadius: '10px'}}
+                          style={{ borderRadius: '10px' }}
                         />
                         {errors.nomCarte && (
                           <div className="invalid-feedback">
@@ -570,7 +571,7 @@ const Paiement = () => {
                             maxLength="5"
                             value={formData.expiration}
                             onChange={handleChange}
-                            style={{borderRadius: '10px'}}
+                            style={{ borderRadius: '10px' }}
                           />
                           {errors.expiration && (
                             <div className="invalid-feedback">
@@ -590,7 +591,7 @@ const Paiement = () => {
                             maxLength="3"
                             value={formData.cvv}
                             onChange={handleChange}
-                            style={{borderRadius: '10px'}}
+                            style={{ borderRadius: '10px' }}
                           />
                           {errors.cvv && (
                             <div className="invalid-feedback">
@@ -658,16 +659,16 @@ const Paiement = () => {
           padding: '20px'
         }}>
           <div className="card border-0 shadow-lg p-4 text-center"
-               style={{
-                 borderRadius: '20px',
-                 maxWidth: '400px',
-                 width: '100%',
-                 backgroundColor: 'white'
-               }}>
+            style={{
+              borderRadius: '20px',
+              maxWidth: '400px',
+              width: '100%',
+              backgroundColor: 'white'
+            }}>
             <div className="mb-3">
               <div className="fs-1">🌊</div>
               <h4 className="fw-bold"
-                  style={{color: '#1DC8FF'}}>
+                style={{ color: '#1DC8FF' }}>
                 Paiement Wave
               </h4>
             </div>
@@ -677,8 +678,8 @@ const Paiement = () => {
             </p>
             <p className="mb-3 small">
               ou{' '}
-              
-               <a href={waveUrl}
+
+              <a href={waveUrl}
                 className="fw-bold"
                 style={{
                   color: '#1DC8FF',
@@ -706,34 +707,34 @@ const Paiement = () => {
               </div>
             </div>
             <div className="p-2 mb-3 rounded"
-                 style={{
-                   backgroundColor: '#1DC8FF10',
-                   border: '1px solid #1DC8FF30'
-                 }}>
+              style={{
+                backgroundColor: '#1DC8FF10',
+                border: '1px solid #1DC8FF30'
+              }}>
               <small className="text-muted d-block">
                 Numéro Wave Wonderpark
               </small>
               <span className="fw-bold fs-6"
-                    style={{color: '#1DC8FF'}}>
+                style={{ color: '#1DC8FF' }}>
                 78 301 52 52
               </span>
             </div>
             <div className="p-2 mb-4 rounded"
-                 style={{
-                   backgroundColor: '#1DC8FF15',
-                   border: '1px solid #1DC8FF30'
-                 }}>
+              style={{
+                backgroundColor: '#1DC8FF15',
+                border: '1px solid #1DC8FF30'
+              }}>
               <small className="text-muted d-block">
                 Montant à payer
               </small>
               <span className="fw-bold fs-5"
-                    style={{color: '#1DC8FF'}}>
+                style={{ color: '#1DC8FF' }}>
                 {Number(montantPaye).toLocaleString()} F CFA
               </span>
             </div>
             <div className="d-flex gap-2 mb-2">
-              
-               <a href={waveUrl}
+
+              <a href={waveUrl}
                 className="btn fw-bold flex-fill py-2"
                 style={{
                   backgroundColor: '#1DC8FF',
@@ -755,6 +756,18 @@ const Paiement = () => {
                   setSuccess(true);
                 }}>
                 ✅ J'ai payé
+                <a href={waveUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn fw-bold flex-fill py-2"
+                  style={{
+                    backgroundColor: '#1DC8FF',
+                    color: 'white',
+                    borderRadius: '10px',
+                    textDecoration: 'none'
+                  }}>
+                  📱 {isMobile ? 'Ouvrir Wave' : 'Wave sur mobile'}
+                </a>
               </button>
             </div>
             <button
@@ -768,7 +781,7 @@ const Paiement = () => {
 
       {/* FOOTER */}
       <footer className="py-3 text-white text-center"
-              style={{backgroundColor: colors.dark}}>
+        style={{ backgroundColor: colors.dark }}>
         <p className="mb-0 small text-muted">
           © 2025 Wonderpark - Paiement sécurisé
         </p>
