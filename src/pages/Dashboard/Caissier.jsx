@@ -67,6 +67,36 @@ const Caissier = () => {
     };
     chargerReservations();
   }, []);
+  const handleValiderEncaissement = async () => {
+  if (!encaissementData.reservation_id) {
+    setEncaissementError('Entrez un numéro de réservation');
+    return;
+  }
+  if (!encaissementData.methode_paiement) {
+    setEncaissementError('Choisissez une méthode de paiement');
+    return;
+  }
+  try {
+    await caissierAPI.encaisser({
+      reservation_id: parseInt(encaissementData.reservation_id),
+      methode_paiement: encaissementData.methode_paiement,
+      mode_paiement: 'sur_place'
+    });
+    setEncaissementSuccess(true);
+    setEncaissementError('');
+    setEncaissementData({
+      reservation_id: '',
+      methode_paiement: 'especes'
+    });
+    chargerDonnees();
+  } catch (error) {
+    setEncaissementError(
+      error.response?.data?.error ||
+      'Erreur lors de l\'encaissement'
+    );
+    setEncaissementSuccess(false);
+  }
+};
   const getModePaiementBadge = (mode) => {
     if (!mode) return (
       <span className="badge bg-secondary">Non défini</span>
