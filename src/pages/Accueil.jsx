@@ -34,61 +34,56 @@ const Accueil = () => {
           <a className="navbar-brand" href="/">
             <img src={logo} alt="Wonderpark" height="55" />
           </a>
-          {localStorage.getItem('access_token') && (
-            <Link
-              to="/mes-reservations"
-              className="btn btn-sm fw-bold"
-              style={{
-                backgroundColor: colors.primary,
-                color: 'white',
-                borderRadius: '10px'
-              }}>
-              📅 Mes réservations
-            </Link>
+          {localStorage.getItem('access_token') ? (
+            <div className="d-flex align-items-center gap-2">
+              <Link
+                to="/mes-reservations"
+                className="btn btn-sm fw-bold"
+                style={{
+                  backgroundColor: colors.primary,
+                  color: 'white',
+                  borderRadius: '10px'
+                }}>
+                📅 Mes réservations
+              </Link>
+              <button
+                className="btn btn-sm fw-bold"
+                style={{
+                  backgroundColor: colors.secondary,
+                  color: 'white',
+                  borderRadius: '10px'
+                }}
+                onClick={() => {
+                  localStorage.clear();
+                  sessionStorage.clear();
+                  window.location.href = '/login';
+                }}>
+                🚪 Déconnexion
+              </button>
+            </div>
+          ) : (
+            <div className="d-flex gap-2">
+              <Link to="/login"
+                className="btn btn-sm fw-bold"
+                style={{
+                  backgroundColor: 'transparent',
+                  color: 'white',
+                  border: '1px solid white',
+                  borderRadius: '10px'
+                }}>
+                Connexion
+              </Link>
+              <Link to="/register"
+                className="btn btn-sm fw-bold"
+                style={{
+                  backgroundColor: colors.primary,
+                  color: 'white',
+                  borderRadius: '10px'
+                }}>
+                S'inscrire
+              </Link>
+            </div>
           )}
-          <button className="navbar-toggler" type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav ms-auto align-items-center">
-              <li className="nav-item">
-                <a className="nav-link fw-semibold text-white"
-                  href="#activites">Activités</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link fw-semibold text-white"
-                  href="#formules">Formules & Tarifs</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link fw-semibold text-white"
-                  href="#contact">Contact</a>
-              </li>
-              <li className="nav-item ms-2">
-                <Link className="btn fw-bold px-3"
-                  style={{
-                    backgroundColor: colors.primary,
-                    color: 'white',
-                    borderRadius: '20px'
-                  }}
-                  to="/login">
-                  Connexion
-                </Link>
-              </li>
-              <li className="nav-item ms-2">
-                <Link className="btn fw-bold px-3"
-                  style={{
-                    backgroundColor: colors.secondary,
-                    color: 'white',
-                    borderRadius: '20px'
-                  }}
-                  to="/register">
-                  S'inscrire
-                </Link>
-              </li>
-            </ul>
-          </div>
         </div>
       </nav>
 
