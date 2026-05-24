@@ -31,20 +31,27 @@ const Caissier = () => {
   const [encaissementError, setEncaissementError] = useState('');
 
   const handleEncaisser = async (reservationId, montant) => {
+    const methode = window.prompt(
+      'Méthode de paiement ?\n1. especes\n2. orange_money\n3. wave',
+      'especes'
+    );
+    if (!methode) return;
+
     try {
       await caissierAPI.encaisser({
         reservation_id: reservationId,
-        methode_paiement: 'especes',
+        methode_paiement: methode,
         mode_paiement: 'sur_place'
       });
       alert('✅ Paiement encaissé avec succès !');
-      // Recharger les réservations
-      const response = await caissierAPI.reservationsDuJour();
-      const paiResponse = await caissierAPI.tousPaiements();
-      setReservationsDuJour(response.data);
+      const [resResponse, paiResponse] = await Promise.all([
+        caissierAPI.reservationsDuJour(),
+        caissierAPI.tousPaiements()
+      ]);
+      setReservationsDuJour(resResponse.data);
       setPaiementsEffectues(paiResponse.data);
     } catch (error) {
-      alert('❌ Erreur: ' + (error.response?.data?.error || 'Erreur lors de l\'encaissement'));
+      alert('❌ Erreur: ' + (error.response?.data?.error || 'Erreur encaissement'));
     }
   };
   useEffect(() => {
@@ -60,7 +67,37 @@ const Caissier = () => {
     };
     chargerReservations();
   }, []);
+  const getModePaiementBadge = (mode) => {
+    if (!mode) return (
+      <span className="badge bg-secondary">Non défini</span>
+    );
+    return mode === 'en_ligne'
+      ? <span className="badge bg-info">💻 En ligne</span>
+      : <span className="badge bg-warning text-dark">
+        🏢 Sur place
+      </span>;
+  };
 
+  const getMethodePaiementBadge = (methode) => {
+    if (!methode) return null;
+    const config = {
+      orange_money: { label: 'Orange Money', color: '#FF6600' },
+      wave: { label: 'Wave', color: '#1DC8FF' },
+      carte: { label: 'Carte', color: '#2196F3' },
+      especes: { label: 'Espèces', color: '#4CAF50' }
+    };
+    const m = config[methode] || { label: methode, color: '#999' };
+    return (
+      <span className="badge"
+        style={{
+          backgroundColor: `${m.color}20`,
+          color: m.color,
+          border: `1px solid ${m.color}50`
+        }}>
+        {m.label}
+      </span>
+    );
+  };
   const getStatutBadge = (statut) => {
     switch (statut) {
       case 'confirmee':
@@ -207,7 +244,8 @@ const Caissier = () => {
                   {
                     titre: 'Paiements sur place',
                     valeur: `${paiementsEffectues
-                      .filter(p => p.mode_paiement === 'sur_place' && p.statut === 'effectue')
+                      .filter(p => p.statut === 'effectue' && p.mode_paiement === 'sur_place')
+
                       .reduce((acc, p) => acc + parseFloat(p.montant || 0), 0)
                       .toLocaleString()} F`,
                     icon: '💵',
@@ -275,9 +313,13 @@ const Caissier = () => {
                           <th>Accomp.</th>
                           <th>Montant</th>
                           <th>Actions</th>
+                          <th>Mode</th>
+                          <th>Methode</th>
+
                         </tr>
                       </thead>
                       <tbody>
+
                         {reservationsDuJour
                           .filter(r => r.statut === 'en_attente')
                           .map((res) => (
@@ -285,6 +327,56 @@ const Caissier = () => {
                               <td className="fw-semibold">
                                 {res.client_nom}
                               </td>
+                              <tr key={res.id}>
+                                <td>#{res.id}</td>
+                                <td className="fw-semibold">{res.client_nom}</td>
+                                <td>{res.formule_nom}</td>
+                                <td>{res.nombre_enfants}</td>
+                                <td>
+                                  {res.nombre_accompagnateurs}
+                                  <small className="text-success d-block">
+                                    🥤 Boisson offerte
+                                  </small>
+                                </td>
+                                <td className="fw-bold"
+                                  style={{ color: colors.primary }}>
+                                  {parseFloat(res.montant_total || 0)
+                                    .toLocaleString()} F
+                                </td>
+                                <td>{getModePaiementBadge(res.mode_paiement)}</td>
+                                <td>{getMethodePaiementBadge(res.methode_paiement)}</td>
+                                <td>
+                                  {res.statut === 'en_attente' &&
+                                    res.mode_paiement !== 'en_ligne' && (
+                                      <button
+                                        className="btn btn-sm fw-bold me-1"
+                                        style={{
+                                          backgroundColor: colors.green,
+                                          color: 'white',
+                                          borderRadius: '8px'
+                                        }}
+                                        onClick={() => handleEncaisser(res.id)}>
+                                        💵 Encaisser
+                                      </button>
+                                    )}
+                                  {res.statut === 'en_attente' && (
+                                    <button
+                                      className="btn btn-sm btn-outline-danger"
+                                      style={{ borderRadius: '8px' }}
+                                      onClick={() => handleAnnuler(res.id)}>
+                                      ❌
+                                    </button>
+                                  )}
+                                  {res.statut === 'confirmee' && (
+                                    <button
+                                      className="btn btn-sm btn-outline-primary"
+                                      style={{ borderRadius: '8px' }}
+                                      onClick={() => window.print()}>
+                                      🖨️ Reçu
+                                    </button>
+                                  )}
+                                </td>
+                              </tr>
                               <td>{res.formule_nom}</td>
                               <td>{res.nombre_enfants}</td>
                               <td>
@@ -316,6 +408,7 @@ const Caissier = () => {
                                 </button>
                               </td>
                             </tr>
+
                           ))}
                       </tbody>
                     </table>
@@ -382,11 +475,11 @@ const Caissier = () => {
                                       {res.methode_paiement === 'especes'
                                         ? '💵 Espèces'
                                         : res.methode_paiement === 'orange_money'
-                                          ? '🟠 Orange Money'
+                                          ? ' Orange Money'
                                           : res.methode_paiement === 'wave'
-                                            ? '🌊 Wave'
+                                            ? ' Wave'
                                             : res.methode_paiement === 'carte'
-                                              ? '💳 Carte Bancaire'
+                                              ? ' Carte Bancaire'
                                               : '—'}
                                     </small>
                                   </span>
@@ -430,107 +523,129 @@ const Caissier = () => {
           )}
           {/* ENCAISSEMENT */}
           {activeMenu === 'encaissement' && (
-            <div>
-              <h4 className="fw-bold mb-4" style={{ color: colors.dark }}>
-                💵 Encaissement sur place
-              </h4>
+  <div>
+    <h4 className="fw-bold mb-4" style={{color: colors.dark}}>
+      💵 Encaissement sur place
+    </h4>
 
-              {encaissementSuccess && (
-                <div className="alert alert-success">
-                  ✅ Paiement enregistré avec succès !
-                </div>
-              )}
-              {encaissementError && (
-                <div className="alert alert-danger">
-                  ❌ {encaissementError}
-                </div>
-              )}
+    {encaissementSuccess && (
+      <div className="alert alert-success alert-dismissible">
+        ✅ Paiement enregistré avec succès !
+        <button type="button" className="btn-close"
+                onClick={() => setEncaissementSuccess(false)}/>
+      </div>
+    )}
+    {encaissementError && (
+      <div className="alert alert-danger alert-dismissible">
+        ❌ {encaissementError}
+        <button type="button" className="btn-close"
+                onClick={() => setEncaissementError('')}/>
+      </div>
+    )}
 
-              <div className="row justify-content-center">
-                <div className="col-md-7">
-                  <div className="card border-0 shadow-sm p-4"
-                    style={{ borderRadius: '15px' }}>
-                    <h6 className="fw-bold mb-4" style={{ color: colors.dark }}>
-                      Enregistrer un paiement sur place
-                    </h6>
+    <div className="row justify-content-center">
+      <div className="col-md-7">
+        <div className="card border-0 shadow-sm p-4"
+             style={{borderRadius: '15px'}}>
+          <h6 className="fw-bold mb-4"
+              style={{color: colors.dark}}>
+            Enregistrer un paiement sur place
+          </h6>
 
-                    <div className="mb-3">
-                      <label className="form-label fw-semibold">
-                        Numéro de réservation
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        placeholder="Ex: 1"
-                        value={encaissementData.reservation_id}
-                        onChange={(e) => setEncaissementData({
-                          ...encaissementData,
-                          reservation_id: e.target.value
-                        })}
-                        style={{ borderRadius: '10px' }}
-                      />
-                    </div>
+          <div className="mb-3">
+            <label className="form-label fw-semibold">
+              Numéro de réservation
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              placeholder="Ex: 1"
+              value={encaissementData.reservation_id}
+              onChange={(e) => setEncaissementData({
+                ...encaissementData,
+                reservation_id: e.target.value
+              })}
+              style={{borderRadius: '10px'}}
+            />
+          </div>
 
-                    <div className="mb-3">
-                      <label className="form-label fw-semibold">
-                        Méthode de paiement
-                      </label>
-                      <select
-                        className="form-select"
-                        value={encaissementData.methode_paiement}
-                        onChange={(e) => setEncaissementData({
-                          ...encaissementData,
-                          methode_paiement: e.target.value
-                        })}
-                        style={{ borderRadius: '10px' }}>
-                        <option value="especes">Espèces</option>
-                        <option value="orange_money">Orange Money</option>
-                        <option value="wave">Wave</option>
-                      </select>
-                    </div>
-
-                    <button
-                      className="btn w-100 fw-bold py-3"
-                      style={{
-                        backgroundColor: colors.green,
-                        color: 'white',
-                        borderRadius: '15px'
-                      }}
-                      onClick={async () => {
-                        if (!encaissementData.reservation_id) {
-                          setEncaissementError('Entrez un numéro de réservation');
-                          return;
-                        }
-                        try {
-                          await caissierAPI.encaisser({
-                            reservation_id: parseInt(encaissementData.reservation_id),
-                            methode_paiement: encaissementData.methode_paiement,
-                            mode_paiement: 'sur_place'
-                          });
-                          setEncaissementSuccess(true);
-                          setEncaissementError('');
-                          setEncaissementData({
-                            reservation_id: '',
-                            methode_paiement: 'especes',
-                            mode_paiement: 'sur_place'
-                          });
-                          const response = await caissierAPI.reservationsDuJour();
-                          setReservationsDuJour(response.data);
-                        } catch (error) {
-                          setEncaissementError(
-                            error.response?.data?.error ||
-                            'Erreur lors de l\'encaissement'
-                          );
-                          setEncaissementSuccess(false);
-                        }
-                      }}>
-                      💵 Valider le paiement
-                    </button>
+          {/* MÉTHODE DE PAIEMENT DU CLIENT */}
+          <div className="mb-4">
+            <label className="form-label fw-semibold">
+              Méthode de paiement du client
+            </label>
+            <div className="row g-2">
+              {[
+                {
+                  id: 'especes',
+                  label: 'Espèces',
+                  emoji: '💵',
+                  color: '#4CAF50'
+                },
+                {
+                  id: 'orange_money',
+                  label: 'Orange Money',
+                  emoji: '📱',
+                  color: '#FF6600'
+                },
+                {
+                  id: 'wave',
+                  label: 'Wave',
+                  emoji: '🌊',
+                  color: '#1DC8FF'
+                },
+                {
+                  id: 'carte',
+                  label: 'Carte',
+                  emoji: '💳',
+                  color: '#2196F3'
+                }
+              ].map((m) => (
+                <div className="col-6" key={m.id}>
+                  <div
+                    className="card text-center p-2"
+                    style={{
+                      borderRadius: '10px',
+                      cursor: 'pointer',
+                      border: encaissementData.methode_paiement === m.id
+                        ? `2px solid ${m.color}`
+                        : '2px solid #eee',
+                      backgroundColor:
+                        encaissementData.methode_paiement === m.id
+                        ? `${m.color}15`
+                        : 'white'
+                    }}
+                    onClick={() => setEncaissementData({
+                      ...encaissementData,
+                      methode_paiement: m.id
+                    })}>
+                    <div>{m.emoji}</div>
+                    <small className="fw-bold"
+                           style={{color: m.color}}>
+                      {m.label}
+                    </small>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
-          )}
+          </div>
+
+          <button
+            className="btn w-100 fw-bold py-3"
+            style={{
+              backgroundColor: colors.green,
+              color: 'white',
+              borderRadius: '15px',
+              fontSize: '1.1rem'
+            }}
+            onClick={handleValiderEncaissement}>
+            💵 Valider le paiement
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
           {/* PAIEMENTS EFFECTUÉS */}
           {activeMenu === 'paiements' && (
@@ -613,11 +728,9 @@ const Caissier = () => {
               </div>
             </div>
           )}
-
-
-
         </div>
       </div>
+
     </div>
   );
 };
