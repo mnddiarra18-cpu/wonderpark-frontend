@@ -115,11 +115,7 @@ const Caissier = () => {
     }
   };
 
-  const getModePaiementBadge = (mode) => {
-    return mode === 'en_ligne'
-      ? <span className="badge bg-info">En ligne</span>
-      : <span className="badge bg-secondary">Sur place</span>;
-  };
+
 
   const handleLogout = () => {
     localStorage.removeItem('user');
