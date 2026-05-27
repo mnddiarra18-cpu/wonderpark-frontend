@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from '../../assets/logo.png';
 import { caissierAPI } from '../../services/api';
+import wavelogo from '../../assets/paiement/wave.webp';
+import orangeMoneyLogo from '../../assets/paiement/orangemoney.webp';
 
 const Caissier = () => {
   const navigate = useNavigate();
@@ -68,35 +70,35 @@ const Caissier = () => {
     chargerReservations();
   }, []);
   const handleValiderEncaissement = async () => {
-  if (!encaissementData.reservation_id) {
-    setEncaissementError('Entrez un numéro de réservation');
-    return;
-  }
-  if (!encaissementData.methode_paiement) {
-    setEncaissementError('Choisissez une méthode de paiement');
-    return;
-  }
-  try {
-    await caissierAPI.encaisser({
-      reservation_id: parseInt(encaissementData.reservation_id),
-      methode_paiement: encaissementData.methode_paiement,
-      mode_paiement: 'sur_place'
-    });
-    setEncaissementSuccess(true);
-    setEncaissementError('');
-    setEncaissementData({
-      reservation_id: '',
-      methode_paiement: 'especes'
-    });
-    chargerDonnees();
-  } catch (error) {
-    setEncaissementError(
-      error.response?.data?.error ||
-      'Erreur lors de l\'encaissement'
-    );
-    setEncaissementSuccess(false);
-  }
-};
+    if (!encaissementData.reservation_id) {
+      setEncaissementError('Entrez un numéro de réservation');
+      return;
+    }
+    if (!encaissementData.methode_paiement) {
+      setEncaissementError('Choisissez une méthode de paiement');
+      return;
+    }
+    try {
+      await caissierAPI.encaisser({
+        reservation_id: parseInt(encaissementData.reservation_id),
+        methode_paiement: encaissementData.methode_paiement,
+        mode_paiement: 'sur_place'
+      });
+      setEncaissementSuccess(true);
+      setEncaissementError('');
+      setEncaissementData({
+        reservation_id: '',
+        methode_paiement: 'especes'
+      });
+      chargerDonnees();
+    } catch (error) {
+      setEncaissementError(
+        error.response?.data?.error ||
+        'Erreur lors de l\'encaissement'
+      );
+      setEncaissementSuccess(false);
+    }
+  };
   const getModePaiementBadge = (mode) => {
     if (!mode) return (
       <span className="badge bg-secondary">Non défini</span>
@@ -549,129 +551,146 @@ const Caissier = () => {
           )}
           {/* ENCAISSEMENT */}
           {activeMenu === 'encaissement' && (
-  <div>
-    <h4 className="fw-bold mb-4" style={{color: colors.dark}}>
-      💵 Encaissement sur place
-    </h4>
+            <div>
+              <h4 className="fw-bold mb-4" style={{ color: colors.dark }}>
+                💵 Encaissement sur place
+              </h4>
 
-    {encaissementSuccess && (
-      <div className="alert alert-success alert-dismissible">
-        ✅ Paiement enregistré avec succès !
-        <button type="button" className="btn-close"
-                onClick={() => setEncaissementSuccess(false)}/>
-      </div>
-    )}
-    {encaissementError && (
-      <div className="alert alert-danger alert-dismissible">
-        ❌ {encaissementError}
-        <button type="button" className="btn-close"
-                onClick={() => setEncaissementError('')}/>
-      </div>
-    )}
+              {encaissementSuccess && (
+                <div className="alert alert-success alert-dismissible">
+                  ✅ Paiement enregistré avec succès !
+                  <button type="button" className="btn-close"
+                    onClick={() => setEncaissementSuccess(false)} />
+                </div>
+              )}
+              {encaissementError && (
+                <div className="alert alert-danger alert-dismissible">
+                  ❌ {encaissementError}
+                  <button type="button" className="btn-close"
+                    onClick={() => setEncaissementError('')} />
+                </div>
+              )}
 
-    <div className="row justify-content-center">
-      <div className="col-md-7">
-        <div className="card border-0 shadow-sm p-4"
-             style={{borderRadius: '15px'}}>
-          <h6 className="fw-bold mb-4"
-              style={{color: colors.dark}}>
-            Enregistrer un paiement sur place
-          </h6>
+              <div className="row justify-content-center">
+                <div className="col-md-7">
+                  <div className="card border-0 shadow-sm p-4"
+                    style={{ borderRadius: '15px' }}>
+                    <h6 className="fw-bold mb-4"
+                      style={{ color: colors.dark }}>
+                      Enregistrer un paiement sur place
+                    </h6>
 
-          <div className="mb-3">
-            <label className="form-label fw-semibold">
-              Numéro de réservation
-            </label>
-            <input
-              type="number"
-              className="form-control"
-              placeholder="Ex: 1"
-              value={encaissementData.reservation_id}
-              onChange={(e) => setEncaissementData({
-                ...encaissementData,
-                reservation_id: e.target.value
-              })}
-              style={{borderRadius: '10px'}}
-            />
-          </div>
+                    <div className="mb-3">
+                      <label className="form-label fw-semibold">
+                        Numéro de réservation
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="Ex: 1"
+                        value={encaissementData.reservation_id}
+                        onChange={(e) => setEncaissementData({
+                          ...encaissementData,
+                          reservation_id: e.target.value
+                        })}
+                        style={{ borderRadius: '10px' }}
+                      />
+                    </div>
 
-          {/* MÉTHODE DE PAIEMENT DU CLIENT */}
-          <div className="mb-4">
-            <label className="form-label fw-semibold">
-              Méthode de paiement du client
-            </label>
-            <div className="row g-2">
-              {[
-                {
-                  id: 'especes',
-                  label: 'Espèces',
-                  emoji: '💵',
-                  color: '#4CAF50'
-                },
-                {
-                  id: 'orange_money',
-                  label: 'Orange Money',
-                  emoji: '📱',
-                  color: '#FF6600'
-                },
-                {
-                  id: 'wave',
-                  label: 'Wave',
-                  emoji: '🌊',
-                  color: '#1DC8FF'
-                },
-                {
-                  id: 'carte',
-                  label: 'Carte',
-                  emoji: '💳',
-                  color: '#2196F3'
-                }
-              ].map((m) => (
-                <div className="col-6" key={m.id}>
-                  <div
-                    className="card text-center p-2"
-                    style={{
-                      borderRadius: '10px',
-                      cursor: 'pointer',
-                      border: encaissementData.methode_paiement === m.id
-                        ? `2px solid ${m.color}`
-                        : '2px solid #eee',
-                      backgroundColor:
-                        encaissementData.methode_paiement === m.id
-                        ? `${m.color}15`
-                        : 'white'
-                    }}
-                    onClick={() => setEncaissementData({
-                      ...encaissementData,
-                      methode_paiement: m.id
-                    })}>
-                    <div>{m.emoji}</div>
-                    <small className="fw-bold"
-                           style={{color: m.color}}>
-                      {m.label}
-                    </small>
+                    {/* MÉTHODE DE PAIEMENT DU CLIENT */}
+                    <div className="mb-4">
+                      <label className="form-label fw-semibold">
+                        Méthode de paiement du client
+                      </label>
+                      <div className="row g-2">
+                        {[
+                          {
+                            id: 'especes',
+                            label: 'Espèces',
+                            emoji: '💵',
+                            logo: null,
+                            color: '#4CAF50'
+                          },
+                          {
+                            id: 'orange_money',
+                            label: 'Orange Money',
+                            emoji: null,
+                            logo: orangeMoneyLogo,
+                            color: '#FF6600'
+                          },
+                          {
+                            id: 'wave',
+                            label: 'Wave',
+                            emoji: null,
+                            logo: wavelogo,
+                            color: '#1DC8FF'
+                          },
+                          {
+                            id: 'carte',
+                            label: 'Carte',
+                            emoji: '💳',
+                            logo: null,
+                            color: '#2196F3'
+                          }
+                        ].map((m) => (
+                          <div className="col-6" key={m.id}>
+                            <div
+                              className="card text-center p-2"
+                              style={{
+                                borderRadius: '10px',
+                                cursor: 'pointer',
+                                border: encaissementData.methode_paiement === m.id
+                                  ? `2px solid ${m.color}`
+                                  : '2px solid #eee',
+                                backgroundColor:
+                                  encaissementData.methode_paiement === m.id
+                                    ? `${m.color}15`
+                                    : 'white'
+                              }}
+                              onClick={() => setEncaissementData({
+                                ...encaissementData,
+                                methode_paiement: m.id
+                              })}>
+                              {m.logo ? (
+                                <img
+                                  src={m.logo}
+                                  alt={m.label}
+                                  style={{
+                                    height: '35px',
+                                    width: '100%',
+                                    objectFit: 'contain',
+                                    marginBottom: '4px'
+                                  }}
+                                />
+                              ) : (
+                                <div style={{ fontSize: '1.5rem' }}>{m.emoji}</div>
+                              )}
+                              <small className="fw-bold d-block"
+                                style={{ color: m.color }}>
+                                {m.label}
+                              </small>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <button
+                      className="btn w-100 fw-bold py-3"
+                      style={{
+                        backgroundColor: colors.green,
+                        color: 'white',
+                        borderRadius: '15px',
+                        fontSize: '1.1rem'
+                      }}
+                      onClick={handleValiderEncaissement}>
+                      💵 Valider le paiement
+                    </button>
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
-
-          <button
-            className="btn w-100 fw-bold py-3"
-            style={{
-              backgroundColor: colors.green,
-              color: 'white',
-              borderRadius: '15px',
-              fontSize: '1.1rem'
-            }}
-            onClick={handleValiderEncaissement}>
-            💵 Valider le paiement
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+          )}
 
           {/* PAIEMENTS EFFECTUÉS */}
           {activeMenu === 'paiements' && (

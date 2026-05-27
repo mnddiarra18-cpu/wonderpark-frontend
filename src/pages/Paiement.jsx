@@ -645,139 +645,141 @@ const Paiement = () => {
 
       {/* MODAL WAVE */}
       {waveModal && (
+  <div style={{
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    zIndex: 9999,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '20px'
+  }}>
+    <div className="card border-0 shadow-lg p-4 text-center"
+         style={{
+           borderRadius: '20px',
+           maxWidth: '400px',
+           width: '100%',
+           backgroundColor: 'white'
+         }}>
+
+      {/* LOGO WAVE */}
+      <div className="d-flex justify-content-center mb-3">
+        <img
+          src={wavelogo}
+          alt="Wave"
+          style={{
+            height: '60px',
+            objectFit: 'contain'
+          }}
+        />
+      </div>
+
+      {/* DESCRIPTION */}
+      <p className="text-muted small mb-1">
+        Le paiement est en cours de traitement.
+        Vous allez recevoir un SMS pour confirmation.
+      </p>
+      <p className="mb-3 small">
+        ou{' '}
+        
+         <a href={waveUrl}
+          className="fw-bold"
+          style={{
+            color: '#1DC8FF',
+            textDecoration: 'underline'
+          }}>
+          Cliquer sur ce lien
+        </a>
+        {' '}ou scanner le QR Code pour valider le paiement
+      </p>
+
+      {/* QR CODE */}
+      <div className="d-flex justify-content-center mb-3">
         <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0,0,0,0.6)',
-          zIndex: 9999,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px'
+          padding: '15px',
+          backgroundColor: 'white',
+          borderRadius: '15px',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
         }}>
-          <div className="card border-0 shadow-lg p-4 text-center"
-            style={{
-              borderRadius: '20px',
-              maxWidth: '400px',
-              width: '100%',
-              backgroundColor: 'white'
-            }}>
-            <div className="mb-3">
-              <div className="fs-1">🌊</div>
-              <h4 className="fw-bold"
-                style={{ color: '#1DC8FF' }}>
-                Paiement Wave
-              </h4>
-            </div>
-            <p className="text-muted small mb-1">
-              Le paiement est en cours de traitement.
-              Vous allez recevoir un SMS pour confirmation.
-            </p>
-            <p className="mb-3 small">
-              ou{' '}
-
-              <a href={waveUrl}
-                className="fw-bold"
-                style={{
-                  color: '#1DC8FF',
-                  textDecoration: 'underline'
-                }} >
-                Cliquer sur ce lien
-              </a>
-              {' '}ou scanner le QR Code pour valider le paiement
-            </p>
-            <div className="d-flex justify-content-center mb-3">
-              <div style={{
-                padding: '15px',
-                backgroundColor: 'white',
-                borderRadius: '15px',
-                boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-              }}>
-                <QRCodeSVG
-                  value={waveUrl}
-                  size={200}
-                  fgColor="#1DC8FF"
-                  bgColor="white"
-                  level="H"
-                  includeMargin={true}
-                />
-              </div>
-            </div>
-            <div className="p-2 mb-3 rounded"
-              style={{
-                backgroundColor: '#1DC8FF10',
-                border: '1px solid #1DC8FF30'
-              }}>
-              <small className="text-muted d-block">
-                Numéro Wave Wonderpark
-              </small>
-              <span className="fw-bold fs-6"
-                style={{ color: '#1DC8FF' }}>
-                78 301 52 52
-              </span>
-            </div>
-            <div className="p-2 mb-4 rounded"
-              style={{
-                backgroundColor: '#1DC8FF15',
-                border: '1px solid #1DC8FF30'
-              }}>
-              <small className="text-muted d-block">
-                Montant à payer
-              </small>
-              <span className="fw-bold fs-5"
-                style={{ color: '#1DC8FF' }}>
-                {Number(montantPaye).toLocaleString()} F CFA
-              </span>
-            </div>
-            <div className="d-flex gap-2 mb-2">
-
-              <a href={waveUrl}
-                className="btn fw-bold flex-fill py-2"
-                style={{
-                  backgroundColor: '#1DC8FF',
-                  color: 'white',
-                  borderRadius: '10px',
-                  textDecoration: 'none'
-                }}>
-                📱 Ouvrir Wave
-              </a>
-              <button
-                className="btn fw-bold flex-fill py-2"
-                style={{
-                  backgroundColor: colors.green,
-                  color: 'white',
-                  borderRadius: '10px'
-                }}
-                onClick={() => {
-                  setWaveModal(false);
-                  setSuccess(true);
-                }}>
-                ✅ J'ai payé
-                <a href={waveUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn fw-bold flex-fill py-2"
-                  style={{
-                    backgroundColor: '#1DC8FF',
-                    color: 'white',
-                    borderRadius: '10px',
-                    textDecoration: 'none'
-                  }}>
-                  📱 {isMobile ? 'Ouvrir Wave' : 'Wave sur mobile'}
-                </a>
-              </button>
-            </div>
-            <button
-              className="btn btn-link text-muted small"
-              onClick={() => setWaveModal(false)}>
-              Annuler
-            </button>
-          </div>
+          <QRCodeSVG
+            value={waveUrl}
+            size={200}
+            fgColor="#1DC8FF"
+            bgColor="white"
+            level="H"
+            includeMargin={true}
+          />
         </div>
-      )}
+      </div>
+
+      {/* NUMÉRO WAVE */}
+      <div className="p-2 mb-3 rounded"
+           style={{
+             backgroundColor: '#1DC8FF10',
+             border: '1px solid #1DC8FF30'
+           }}>
+        <small className="text-muted d-block">
+          Numéro Wave Wonderpark
+        </small>
+        <span className="fw-bold fs-6"
+              style={{color: '#1DC8FF'}}>
+          78 301 52 52
+        </span>
+      </div>
+
+      {/* MONTANT */}
+      <div className="p-2 mb-4 rounded"
+           style={{
+             backgroundColor: '#1DC8FF15',
+             border: '1px solid #1DC8FF30'
+           }}>
+        <small className="text-muted d-block">
+          Montant à payer
+        </small>
+        <span className="fw-bold fs-5"
+              style={{color: '#1DC8FF'}}>
+          {Number(montantPaye).toLocaleString()} F CFA
+        </span>
+      </div>
+
+      {/* BOUTONS */}
+      <div className="d-flex gap-2 mb-2">
+        
+          <a href={waveUrl}
+          className="btn fw-bold flex-fill py-2"
+          style={{
+            backgroundColor: '#1DC8FF',
+            color: 'white',
+            borderRadius: '10px',
+            textDecoration: 'none'
+          }}>
+          <img
+            src={wavelogo}
+            alt="Wave"
+            style={{
+              height: '20px',
+              objectFit: 'contain',
+              marginRight: '8px',
+              filter: 'brightness(0) invert(1)'
+            }}
+          />
+          Payer avec Wave
+        </a>
+      </div>
+
+      <button
+        className="btn btn-link text-muted small"
+        onClick={() => setWaveModal(false)}>
+        Annuler
+      </button>
+
+    </div>
+  </div>
+)}
 
       {/* FOOTER */}
       <footer className="py-3 text-white text-center"
