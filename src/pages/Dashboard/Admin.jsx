@@ -108,29 +108,29 @@ const Admin = () => {
     };
     chargerDonnees();
   }, []);
-const handleModifierStatut = async (id, statut) => {
-  try {
-    await reservationAPI.modifierStatut(id, statut);
-    alert('✅ Statut modifié avec succès !');
-    const response = await gestionnaireAPI.toutesReservations();
-    setReservations(response.data);
-  } catch (error) {
-    alert('❌ Erreur lors de la modification');
-  }
-};
-
-const handleAnnuler = async (id) => {
-  if (window.confirm('Voulez-vous vraiment annuler cette réservation ?')) {
+  const handleModifierStatut = async (id, statut) => {
     try {
-      await reservationAPI.modifierStatut(id, 'annulee');
-      alert('✅ Réservation annulée !');
+      await reservationAPI.modifierStatut(id, statut);
+      alert('✅ Statut modifié avec succès !');
       const response = await gestionnaireAPI.toutesReservations();
       setReservations(response.data);
     } catch (error) {
-      alert('❌ Erreur lors de l\'annulation');
+      alert('❌ Erreur lors de la modification');
     }
-  }
-};
+  };
+
+  const handleAnnuler = async (id) => {
+    if (window.confirm('Voulez-vous vraiment annuler cette réservation ?')) {
+      try {
+        await reservationAPI.modifierStatut(id, 'annulee');
+        alert('✅ Réservation annulée !');
+        const response = await gestionnaireAPI.toutesReservations();
+        setReservations(response.data);
+      } catch (error) {
+        alert('❌ Erreur lors de l\'annulation');
+      }
+    }
+  };
   const getStatutBadge = (statut) => {
     switch (statut) {
       case 'confirmee':
@@ -152,19 +152,19 @@ const handleAnnuler = async (id) => {
       comptable: 'secondary',
       admin: 'danger'
     };
-   const reservationsFiltrees = reservations.filter((res) => {
-  const matchSearch = searchTerm === '' ||
-    res.client_nom?.toLowerCase().includes(searchTerm.toLowerCase());
+    const reservationsFiltrees = reservations.filter((res) => {
+      const matchSearch = searchTerm === '' ||
+        res.client_nom?.toLowerCase().includes(searchTerm.toLowerCase());
 
-  const matchStatut = filterStatut === '' ||
-    res.statut === filterStatut;
+      const matchStatut = filterStatut === '' ||
+        res.statut === filterStatut;
 
-  const matchDate = filterDate === '' ||
-    (res.date_reservation &&
-     res.date_reservation.slice(0, 10) === filterDate);
+      const matchDate = filterDate === '' ||
+        (res.date_reservation &&
+          res.date_reservation.slice(0, 10) === filterDate);
 
-  return matchSearch && matchStatut && matchDate;
-});
+      return matchSearch && matchStatut && matchDate;
+    });
     return (
       <span className={`badge bg-${roleColors[role] || 'primary'}`}>
         {role.charAt(0).toUpperCase() + role.slice(1)}
@@ -197,7 +197,7 @@ const handleAnnuler = async (id) => {
     }}>
 
       <nav className="navbar navbar-dark shadow-sm"
-           style={{backgroundColor: colors.dark, zIndex: 1000}}>
+        style={{ backgroundColor: colors.dark, zIndex: 1000 }}>
         <div className="container-fluid px-3">
           <div className="d-flex align-items-center">
             <button
@@ -205,7 +205,7 @@ const handleAnnuler = async (id) => {
               onClick={() => setSidebarOpen(!sidebarOpen)}>
               ☰
             </button>
-            <img src={logo} alt="Wonderpark" height="40" className="me-2"/>
+            <img src={logo} alt="Wonderpark" height="40" className="me-2" />
             <span className="fw-bold text-white">Administration</span>
           </div>
           <div className="d-flex align-items-center gap-3">
@@ -252,10 +252,10 @@ const handleAnnuler = async (id) => {
                 <span className="fw-semibold">{item.label}</span>
               </div>
             ))}
-            <hr style={{borderColor: '#444', margin: '20px 10px'}}/>
+            <hr style={{ borderColor: '#444', margin: '20px 10px' }} />
             <Link to="/"
               className="px-3 py-2 mb-1 mx-2 rounded d-block text-decoration-none"
-              style={{color: '#ccc'}}>
+              style={{ color: '#ccc' }}>
               <span className="me-2">🌐</span>
               <span className="fw-semibold">Voir le site</span>
             </Link>
@@ -266,21 +266,21 @@ const handleAnnuler = async (id) => {
 
           {activeMenu === 'accueil' && (
             <div>
-              <h4 className="fw-bold mb-4" style={{color: colors.dark}}>
+              <h4 className="fw-bold mb-4" style={{ color: colors.dark }}>
                 🏠 Tableau de bord
               </h4>
               <div className="row g-3 mb-4">
                 {stats.map((stat, i) => (
                   <div className="col-md-3" key={i}>
                     <div className="card border-0 shadow-sm h-100"
-                         style={{borderRadius: '15px'}}>
+                      style={{ borderRadius: '15px' }}>
                       <div className="card-body p-3">
                         <div className="d-flex justify-content-between
                                         align-items-start mb-2">
                           <div>
                             <small className="text-muted">{stat.titre}</small>
                             <h4 className="fw-bold mb-0"
-                                style={{color: stat.couleur}}>
+                              style={{ color: stat.couleur }}>
                               {stat.valeur}
                             </h4>
                           </div>
@@ -296,11 +296,11 @@ const handleAnnuler = async (id) => {
               </div>
 
               <div className="card border-0 shadow-sm"
-                   style={{borderRadius: '15px'}}>
+                style={{ borderRadius: '15px' }}>
                 <div className="card-header bg-white py-3 d-flex
                                 justify-content-between align-items-center"
-                     style={{borderRadius: '15px 15px 0 0'}}>
-                  <h6 className="fw-bold mb-0" style={{color: colors.dark}}>
+                  style={{ borderRadius: '15px 15px 0 0' }}>
+                  <h6 className="fw-bold mb-0" style={{ color: colors.dark }}>
                     📅 Dernières Réservations
                   </h6>
                   <button
@@ -317,7 +317,7 @@ const handleAnnuler = async (id) => {
                 <div className="card-body p-0">
                   <div className="table-responsive">
                     <table className="table table-hover mb-0">
-                      <thead style={{backgroundColor: '#F8F9FA'}}>
+                      <thead style={{ backgroundColor: '#F8F9FA' }}>
                         <tr>
                           <th>#</th>
                           <th>Client</th>
@@ -336,12 +336,12 @@ const handleAnnuler = async (id) => {
                             <td>{res.formule_nom}</td>
                             <td>{res.date_reservation
                               ? new Date(res.date_reservation)
-                                  .toLocaleDateString('fr-FR')
+                                .toLocaleDateString('fr-FR')
                               : ''}
                             </td>
                             <td>{res.nombre_enfants}</td>
                             <td className="fw-bold"
-                                style={{color: colors.primary}}>
+                              style={{ color: colors.primary }}>
                               {parseFloat(res.montant_total || 0)
                                 .toLocaleString()} F
                             </td>
@@ -357,131 +357,131 @@ const handleAnnuler = async (id) => {
           )}
 
           {activeMenu === 'reservations' && (
-  <div>
-    <h4 className="fw-bold mb-4" style={{color: colors.dark}}>
-      📅 Gestion des Réservations
-    </h4>
-    <div className="card border-0 shadow-sm p-3 mb-4"
-         style={{borderRadius: '15px'}}>
-      <div className="row g-3">
-        <div className="col-md-4">
-          <input type="text" className="form-control"
-                 placeholder="🔍 Rechercher un client..."
-                 value={searchTerm}
-                 onChange={(e) => setSearchTerm(e.target.value)}
-                 style={{borderRadius: '10px'}}/>
-        </div>
-        <div className="col-md-3">
-          <select className="form-select"
-                  value={filterStatut}
-                  onChange={(e) => setFilterStatut(e.target.value)}
-                  style={{borderRadius: '10px'}}>
-            <option value="">Tous les statuts</option>
-            <option value="confirmee">Confirmée</option>
-            <option value="en_attente">En attente</option>
-            <option value="annulee">Annulée</option>
-          </select>
-        </div>
-        <div className="col-md-3">
-          <input type="date" className="form-control"
-                 value={filterDate}
-                 onChange={(e) => setFilterDate(e.target.value)}
-                 style={{borderRadius: '10px'}}/>
-        </div>
-      </div>
-    </div>
-    <div className="card border-0 shadow-sm"
-         style={{borderRadius: '15px'}}>
-      <div className="card-body p-0">
-        <div className="table-responsive">
-          <table className="table table-hover mb-0">
-            <thead style={{backgroundColor: '#F8F9FA'}}>
-              <tr>
-                <th>#</th>
-                <th>Client</th>
-                <th>Formule</th>
-                <th>Date</th>
-                <th>Enfants</th>
-                <th>Accomp.</th>
-                <th>Montant</th>
-                <th>Statut</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reservationsFiltrees.length === 0 ? (
-                <tr>
-                  <td colSpan="9"
-                      className="text-center text-muted py-3">
-                    Aucune réservation
-                  </td>
-                </tr>
-              ) : (
-                reservationsFiltrees.map((res) => (
-                  <tr key={res.id}>
-                    <td>#{res.id}</td>
-                    <td className="fw-semibold">
-                      {res.client_nom}
-                    </td>
-                    <td>{res.formule_nom}</td>
-                    <td>{res.date_reservation
-                      ? new Date(res.date_reservation)
-                          .toLocaleDateString('fr-FR')
-                      : ''}
-                    </td>
-                    <td>{res.nombre_enfants}</td>
-                    <td>{res.nombre_accompagnateurs}</td>
-                    <td className="fw-bold"
-                        style={{color: colors.primary}}>
-                      {parseFloat(res.montant_total || 0)
-                        .toLocaleString()} F
-                    </td>
-                    <td>{getStatutBadge(res.statut)}</td>
-                    <td>
-                      <button
-                        className="btn btn-sm btn-outline-primary me-1"
-                        style={{borderRadius: '8px'}}>
-                        👁️
-                      </button>
-                      <button
-                        className="btn btn-sm btn-outline-danger"
-                        style={{borderRadius: '8px'}}>
-                        🗑️
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+            <div>
+              <h4 className="fw-bold mb-4" style={{ color: colors.dark }}>
+                📅 Gestion des Réservations
+              </h4>
+              <div className="card border-0 shadow-sm p-3 mb-4"
+                style={{ borderRadius: '15px' }}>
+                <div className="row g-3">
+                  <div className="col-md-4">
+                    <input type="text" className="form-control"
+                      placeholder="🔍 Rechercher un client..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      style={{ borderRadius: '10px' }} />
+                  </div>
+                  <div className="col-md-3">
+                    <select className="form-select"
+                      value={filterStatut}
+                      onChange={(e) => setFilterStatut(e.target.value)}
+                      style={{ borderRadius: '10px' }}>
+                      <option value="">Tous les statuts</option>
+                      <option value="confirmee">Confirmée</option>
+                      <option value="en_attente">En attente</option>
+                      <option value="annulee">Annulée</option>
+                    </select>
+                  </div>
+                  <div className="col-md-3">
+                    <input type="date" className="form-control"
+                      value={filterDate}
+                      onChange={(e) => setFilterDate(e.target.value)}
+                      style={{ borderRadius: '10px' }} />
+                  </div>
+                </div>
+              </div>
+              <div className="card border-0 shadow-sm"
+                style={{ borderRadius: '15px' }}>
+                <div className="card-body p-0">
+                  <div className="table-responsive">
+                    <table className="table table-hover mb-0">
+                      <thead style={{ backgroundColor: '#F8F9FA' }}>
+                        <tr>
+                          <th>#</th>
+                          <th>Client</th>
+                          <th>Formule</th>
+                          <th>Date</th>
+                          <th>Enfants</th>
+                          <th>Accomp.</th>
+                          <th>Montant</th>
+                          <th>Statut</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {reservationsFiltrees.length === 0 ? (
+                          <tr>
+                            <td colSpan="9"
+                              className="text-center text-muted py-3">
+                              Aucune réservation
+                            </td>
+                          </tr>
+                        ) : (
+                          reservationsFiltrees.map((res) => (
+                            <tr key={res.id}>
+                              <td>#{res.id}</td>
+                              <td className="fw-semibold">
+                                {res.client_nom}
+                              </td>
+                              <td>{res.formule_nom}</td>
+                              <td>{res.date_reservation
+                                ? new Date(res.date_reservation)
+                                  .toLocaleDateString('fr-FR')
+                                : ''}
+                              </td>
+                              <td>{res.nombre_enfants}</td>
+                              <td>{res.nombre_accompagnateurs}</td>
+                              <td className="fw-bold"
+                                style={{ color: colors.primary }}>
+                                {parseFloat(res.montant_total || 0)
+                                  .toLocaleString()} F
+                              </td>
+                              <td>{getStatutBadge(res.statut)}</td>
+                              <td>
+                                <button
+                                  className="btn btn-sm btn-outline-primary me-1"
+                                  style={{ borderRadius: '8px' }}>
+                                  👁️
+                                </button>
+                                <button
+                                  className="btn btn-sm btn-outline-danger"
+                                  style={{ borderRadius: '8px' }}>
+                                  🗑️
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {activeMenu === 'utilisateurs' && (
             <div>
               <div className="d-flex justify-content-between
                               align-items-center mb-4">
-                <h4 className="fw-bold mb-0" style={{color: colors.dark}}>
+                <h4 className="fw-bold mb-0" style={{ color: colors.dark }}>
                   👥 Gestion des Utilisateurs
                 </h4>
                 <button className="btn fw-bold"
-                        style={{
-                          backgroundColor: colors.primary,
-                          color: 'white',
-                          borderRadius: '10px'
-                        }}>
+                  style={{
+                    backgroundColor: colors.primary,
+                    color: 'white',
+                    borderRadius: '10px'
+                  }}>
                   + Ajouter un utilisateur
                 </button>
               </div>
               <div className="card border-0 shadow-sm"
-                   style={{borderRadius: '15px'}}>
+                style={{ borderRadius: '15px' }}>
                 <div className="card-body p-0">
                   <div className="table-responsive">
                     <table className="table table-hover mb-0">
-                      <thead style={{backgroundColor: '#F8F9FA'}}>
+                      <thead style={{ backgroundColor: '#F8F9FA' }}>
                         <tr>
                           <th>#</th>
                           <th>Nom</th>
@@ -496,7 +496,7 @@ const handleAnnuler = async (id) => {
                         {utilisateurs.length === 0 ? (
                           <tr>
                             <td colSpan="7"
-                                className="text-center text-muted py-3">
+                              className="text-center text-muted py-3">
                               Aucun utilisateur
                             </td>
                           </tr>
@@ -522,23 +522,23 @@ const handleAnnuler = async (id) => {
                               </td>
                               <td>{user.date_creation
                                 ? new Date(user.date_creation)
-                                    .toLocaleDateString('fr-FR')
+                                  .toLocaleDateString('fr-FR')
                                 : ''}
                               </td>
                               <td>
-  <button
-    className="btn btn-sm btn-outline-success me-1"
-    style={{borderRadius: '8px'}}
-    onClick={() => handleModifierStatut(res.id, 'confirmee')}>
-    ✅
-  </button>
-  <button
-    className="btn btn-sm btn-outline-danger"
-    style={{borderRadius: '8px'}}
-    onClick={() => handleAnnuler(res.id)}>
-    ❌
-  </button>
-</td>
+                                <button
+                                  className="btn btn-sm btn-outline-success me-1"
+                                  style={{ borderRadius: '8px' }}
+                                  onClick={() => handleModifierStatut(res.id, 'confirmee')}>
+                                  ✅
+                                </button>
+                                <button
+                                  className="btn btn-sm btn-outline-danger"
+                                  style={{ borderRadius: '8px' }}
+                                  onClick={() => handleAnnuler(res.id)}>
+                                  ❌
+                                </button>
+                              </td>
                             </tr>
                           ))
                         )}
@@ -552,34 +552,34 @@ const handleAnnuler = async (id) => {
 
           {activeMenu === 'statistiques' && (
             <div>
-              <h4 className="fw-bold mb-4" style={{color: colors.dark}}>
+              <h4 className="fw-bold mb-4" style={{ color: colors.dark }}>
                 📊 Statistiques
               </h4>
               <div className="row g-3">
                 <div className="col-md-6">
                   <div className="card border-0 shadow-sm p-4"
-                       style={{borderRadius: '15px'}}>
+                    style={{ borderRadius: '15px' }}>
                     <h6 className="fw-bold mb-3">
                       📅 Réservations par formule
                     </h6>
                     {[
-                      {nom: 'Journée Entière', nb: 45, couleur: colors.primary},
-                      {nom: 'Demi-Journée', nb: 32, couleur: colors.blue},
-                      {nom: 'Aire de Jeu 1h', nb: 28, couleur: colors.green},
-                      {nom: 'Aire de Jeu 2h', nb: 15, couleur: colors.purple},
-                      {nom: 'Anniversaire', nb: 4, couleur: colors.secondary}
+                      { nom: 'Journée Entière', nb: 45, couleur: colors.primary },
+                      { nom: 'Demi-Journée', nb: 32, couleur: colors.blue },
+                      { nom: 'Aire de Jeu 1h', nb: 28, couleur: colors.green },
+                      { nom: 'Aire de Jeu 2h', nb: 15, couleur: colors.purple },
+                      { nom: 'Anniversaire', nb: 4, couleur: colors.secondary }
                     ].map((item, i) => (
                       <div key={i} className="mb-3">
                         <div className="d-flex justify-content-between mb-1">
                           <small className="fw-semibold">{item.nom}</small>
                           <small className="fw-bold">{item.nb}</small>
                         </div>
-                        <div className="progress" style={{height: '8px'}}>
+                        <div className="progress" style={{ height: '8px' }}>
                           <div className="progress-bar"
-                               style={{
-                                 width: `${(item.nb / 45) * 100}%`,
-                                 backgroundColor: item.couleur
-                               }}/>
+                            style={{
+                              width: `${(item.nb / 45) * 100}%`,
+                              backgroundColor: item.couleur
+                            }} />
                         </div>
                       </div>
                     ))}
@@ -587,15 +587,15 @@ const handleAnnuler = async (id) => {
                 </div>
                 <div className="col-md-6">
                   <div className="card border-0 shadow-sm p-4"
-                       style={{borderRadius: '15px'}}>
+                    style={{ borderRadius: '15px' }}>
                     <h6 className="fw-bold mb-3">
                       💰 Chiffre d'affaires mensuel
                     </h6>
                     {[
-                      {mois: 'Janvier', montant: 180000},
-                      {mois: 'Février', montant: 220000},
-                      {mois: 'Mars', montant: 195000},
-                      {mois: 'Avril', montant: 240000}
+                      { mois: 'Janvier', montant: 180000 },
+                      { mois: 'Février', montant: 220000 },
+                      { mois: 'Mars', montant: 195000 },
+                      { mois: 'Avril', montant: 240000 }
                     ].map((item, i) => (
                       <div key={i} className="mb-3">
                         <div className="d-flex justify-content-between mb-1">
@@ -604,12 +604,12 @@ const handleAnnuler = async (id) => {
                             {item.montant.toLocaleString()} F
                           </small>
                         </div>
-                        <div className="progress" style={{height: '8px'}}>
+                        <div className="progress" style={{ height: '8px' }}>
                           <div className="progress-bar"
-                               style={{
-                                 width: `${(item.montant / 240000) * 100}%`,
-                                 backgroundColor: colors.primary
-                               }}/>
+                            style={{
+                              width: `${(item.montant / 240000) * 100}%`,
+                              backgroundColor: colors.primary
+                            }} />
                         </div>
                       </div>
                     ))}
@@ -621,7 +621,7 @@ const handleAnnuler = async (id) => {
 
           {activeMenu === 'base_donnees' && (
             <div>
-              <h4 className="fw-bold mb-4" style={{color: colors.dark}}>
+              <h4 className="fw-bold mb-4" style={{ color: colors.dark }}>
                 🗄️ Gestion de la Base de Données
               </h4>
               <div className="row g-3">
@@ -647,16 +647,16 @@ const handleAnnuler = async (id) => {
                 ].map((item, i) => (
                   <div className="col-md-4" key={i}>
                     <div className="card border-0 shadow-sm p-4 text-center"
-                         style={{borderRadius: '15px'}}>
+                      style={{ borderRadius: '15px' }}>
                       <div className="fs-1 mb-2">{item.icon}</div>
                       <h6 className="fw-bold">{item.titre}</h6>
                       <p className="text-muted small">{item.desc}</p>
                       <button className="btn fw-bold w-100"
-                              style={{
-                                backgroundColor: item.couleur,
-                                color: 'white',
-                                borderRadius: '10px'
-                              }}>
+                        style={{
+                          backgroundColor: item.couleur,
+                          color: 'white',
+                          borderRadius: '10px'
+                        }}>
                         {item.btnText}
                       </button>
                     </div>
@@ -668,11 +668,11 @@ const handleAnnuler = async (id) => {
 
           {activeMenu === 'parametres' && (
             <div>
-              <h4 className="fw-bold mb-4" style={{color: colors.dark}}>
+              <h4 className="fw-bold mb-4" style={{ color: colors.dark }}>
                 ⚙️ Paramètres
               </h4>
               <div className="card border-0 shadow-sm p-4"
-                   style={{borderRadius: '15px'}}>
+                style={{ borderRadius: '15px' }}>
                 <h6 className="fw-bold mb-3">Informations du site</h6>
                 <div className="row g-3">
                   <div className="col-md-6">
@@ -680,40 +680,40 @@ const handleAnnuler = async (id) => {
                       Nom du site
                     </label>
                     <input type="text" className="form-control"
-                           defaultValue="Wonderpark"
-                           style={{borderRadius: '10px'}}/>
+                      defaultValue="Wonderpark"
+                      style={{ borderRadius: '10px' }} />
                   </div>
                   <div className="col-md-6">
                     <label className="form-label fw-semibold">
                       Email de contact
                     </label>
                     <input type="email" className="form-control"
-                           defaultValue="contact@wonderpark.com"
-                           style={{borderRadius: '10px'}}/>
+                      defaultValue="contact@wonderpark.com"
+                      style={{ borderRadius: '10px' }} />
                   </div>
                   <div className="col-md-6">
                     <label className="form-label fw-semibold">
                       Téléphone
                     </label>
                     <input type="text" className="form-control"
-                           defaultValue="78 301 52 52"
-                           style={{borderRadius: '10px'}}/>
+                      defaultValue="78 301 52 52"
+                      style={{ borderRadius: '10px' }} />
                   </div>
                   <div className="col-md-6">
                     <label className="form-label fw-semibold">
                       Adresse
                     </label>
                     <input type="text" className="form-control"
-                           defaultValue="Place du Souvenir Africain, Dakar"
-                           style={{borderRadius: '10px'}}/>
+                      defaultValue="Place du Souvenir Africain, Dakar"
+                      style={{ borderRadius: '10px' }} />
                   </div>
                   <div className="col-12">
                     <button className="btn fw-bold px-4"
-                            style={{
-                              backgroundColor: colors.primary,
-                              color: 'white',
-                              borderRadius: '10px'
-                            }}>
+                      style={{
+                        backgroundColor: colors.primary,
+                        color: 'white',
+                        borderRadius: '10px'
+                      }}>
                       💾 Sauvegarder les paramètres
                     </button>
                   </div>
