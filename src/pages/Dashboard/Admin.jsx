@@ -152,19 +152,7 @@ const Admin = () => {
       comptable: 'secondary',
       admin: 'danger'
     };
-    const reservationsFiltrees = reservations.filter((res) => {
-      const matchSearch = searchTerm === '' ||
-        res.client_nom?.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchStatut = filterStatut === '' ||
-        res.statut === filterStatut;
-
-      const matchDate = filterDate === '' ||
-        (res.date_reservation &&
-          res.date_reservation.slice(0, 10) === filterDate);
-
-      return matchSearch && matchStatut && matchDate;
-    });
+  
     return (
       <span className={`badge bg-${roleColors[role] || 'primary'}`}>
         {role.charAt(0).toUpperCase() + role.slice(1)}
@@ -187,7 +175,19 @@ const Admin = () => {
     { id: 'base_donnees', label: 'Base de données', icon: '🗄️' },
     { id: 'parametres', label: 'Paramètres', icon: '⚙️' }
   ];
+  const reservationsFiltrees = reservations.filter((res) => {
+      const matchSearch = searchTerm === '' ||
+        res.client_nom?.toLowerCase().includes(searchTerm.toLowerCase());
 
+      const matchStatut = filterStatut === '' ||
+        res.statut === filterStatut;
+
+      const matchDate = filterDate === '' ||
+        (res.date_reservation &&
+          res.date_reservation.slice(0, 10) === filterDate);
+
+      return matchSearch && matchStatut && matchDate;
+    });
   return (
     <div style={{
       minHeight: '100vh',
