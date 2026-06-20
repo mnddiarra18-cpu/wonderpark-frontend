@@ -358,24 +358,24 @@ const handleAnnuler = async (id) => {
 
           {activeMenu === 'reservations' && (
   <div>
-    <h4 className="fw-bold mb-4" style={{ color: colors.dark }}>
+    <h4 className="fw-bold mb-4" style={{color: colors.dark}}>
       📅 Gestion des Réservations
     </h4>
     <div className="card border-0 shadow-sm p-3 mb-4"
-      style={{ borderRadius: '15px' }}>
+         style={{borderRadius: '15px'}}>
       <div className="row g-3">
         <div className="col-md-4">
           <input type="text" className="form-control"
-            placeholder="🔍 Rechercher..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ borderRadius: '10px' }} />
+                 placeholder="🔍 Rechercher un client..."
+                 value={searchTerm}
+                 onChange={(e) => setSearchTerm(e.target.value)}
+                 style={{borderRadius: '10px'}}/>
         </div>
         <div className="col-md-3">
           <select className="form-select"
-            value={filterStatut}
-            onChange={(e) => setFilterStatut(e.target.value)}
-            style={{ borderRadius: '10px' }}>
+                  value={filterStatut}
+                  onChange={(e) => setFilterStatut(e.target.value)}
+                  style={{borderRadius: '10px'}}>
             <option value="">Tous les statuts</option>
             <option value="confirmee">Confirmée</option>
             <option value="en_attente">En attente</option>
@@ -384,18 +384,18 @@ const handleAnnuler = async (id) => {
         </div>
         <div className="col-md-3">
           <input type="date" className="form-control"
-            value={filterDate}
-            onChange={(e) => setFilterDate(e.target.value)}
-            style={{ borderRadius: '10px' }} />
+                 value={filterDate}
+                 onChange={(e) => setFilterDate(e.target.value)}
+                 style={{borderRadius: '10px'}}/>
         </div>
       </div>
     </div>
     <div className="card border-0 shadow-sm"
-      style={{ borderRadius: '15px' }}>
+         style={{borderRadius: '15px'}}>
       <div className="card-body p-0">
         <div className="table-responsive">
           <table className="table table-hover mb-0">
-            <thead style={{ backgroundColor: '#F8F9FA' }}>
+            <thead style={{backgroundColor: '#F8F9FA'}}>
               <tr>
                 <th>#</th>
                 <th>Client</th>
@@ -412,7 +412,7 @@ const handleAnnuler = async (id) => {
               {reservationsFiltrees.length === 0 ? (
                 <tr>
                   <td colSpan="9"
-                    className="text-center text-muted py-3">
+                      className="text-center text-muted py-3">
                     Aucune réservation
                   </td>
                 </tr>
@@ -426,32 +426,27 @@ const handleAnnuler = async (id) => {
                     <td>{res.formule_nom}</td>
                     <td>{res.date_reservation
                       ? new Date(res.date_reservation)
-                        .toLocaleDateString('fr-FR')
+                          .toLocaleDateString('fr-FR')
                       : ''}
                     </td>
                     <td>{res.nombre_enfants}</td>
                     <td>{res.nombre_accompagnateurs}</td>
                     <td className="fw-bold"
-                      style={{ color: colors.primary }}>
+                        style={{color: colors.primary}}>
                       {parseFloat(res.montant_total || 0)
                         .toLocaleString()} F
                     </td>
                     <td>{getStatutBadge(res.statut)}</td>
                     <td>
                       <button
-                        className="btn btn-sm btn-outline-success me-1"
-                        style={{ borderRadius: '8px' }}>
-                        ✅
-                      </button>
-                      <button
-                        className="btn btn-sm btn-outline-warning me-1"
-                        style={{ borderRadius: '8px' }}>
-                        ✏️
+                        className="btn btn-sm btn-outline-primary me-1"
+                        style={{borderRadius: '8px'}}>
+                        👁️
                       </button>
                       <button
                         className="btn btn-sm btn-outline-danger"
-                        style={{ borderRadius: '8px' }}>
-                        ❌
+                        style={{borderRadius: '8px'}}>
+                        🗑️
                       </button>
                     </td>
                   </tr>
