@@ -152,7 +152,7 @@ const handleAnnuler = async (id) => {
       comptable: 'secondary',
       admin: 'danger'
     };
-    const reservationsFiltrees = reservations.filter((res) => {
+   const reservationsFiltrees = reservations.filter((res) => {
   const matchSearch = searchTerm === '' ||
     res.client_nom?.toLowerCase().includes(searchTerm.toLowerCase());
 
