@@ -644,7 +644,7 @@ const Paiement = () => {
       </div>
 
       {/* MODAL WAVE */}
-      {waveModal && (
+{waveModal && (
   <div style={{
     position: 'fixed',
     top: 0,
@@ -685,8 +685,7 @@ const Paiement = () => {
       </p>
       <p className="mb-3 small">
         ou{' '}
-        
-         <a href={waveUrl}
+        <a href={waveUrl}
           className="fw-bold"
           style={{
             color: '#1DC8FF',
@@ -746,29 +745,22 @@ const Paiement = () => {
         </span>
       </div>
 
-      {/* BOUTONS */}
+      {/* BOUTON J'AI PAYÉ */}
       <div className="d-flex gap-2 mb-2">
-        
-          <a href={waveUrl}
+        <button
           className="btn fw-bold flex-fill py-2"
           style={{
-            backgroundColor: '#1DC8FF',
+            backgroundColor: colors.green,
             color: 'white',
             borderRadius: '10px',
-            textDecoration: 'none'
+            border: 'none'
+          }}
+          onClick={() => {
+            setWaveModal(false);
+            setSuccess(true);
           }}>
-          <img
-            src={wavelogo}
-            alt="Wave"
-            style={{
-              height: '20px',
-              objectFit: 'contain',
-              marginRight: '8px',
-              filter: 'brightness(0) invert(1)'
-            }}
-          />
-          Payer avec Wave
-        </a>
+          ✅ J'ai payé
+        </button>
       </div>
 
       <button
