@@ -22,6 +22,9 @@ const Admin = () => {
   const [reservations, setReservations] = useState([]);
   const [utilisateurs, setUtilisateurs] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatut, setFilterStatut] = useState('');
+  const [filterDate, setFilterDate] = useState('');
   const [stats, setStats] = useState([
     {
       titre: 'Total Réservations',
@@ -149,6 +152,19 @@ const handleAnnuler = async (id) => {
       comptable: 'secondary',
       admin: 'danger'
     };
+    const reservationsFiltrees = reservations.filter((res) => {
+  const matchSearch = searchTerm === '' ||
+    res.client_nom?.toLowerCase().includes(searchTerm.toLowerCase());
+
+  const matchStatut = filterStatut === '' ||
+    res.statut === filterStatut;
+
+  const matchDate = filterDate === '' ||
+    (res.date_reservation &&
+     res.date_reservation.slice(0, 10) === filterDate);
+
+  return matchSearch && matchStatut && matchDate;
+});
     return (
       <span className={`badge bg-${roleColors[role] || 'primary'}`}>
         {role.charAt(0).toUpperCase() + role.slice(1)}
@@ -341,102 +357,113 @@ const handleAnnuler = async (id) => {
           )}
 
           {activeMenu === 'reservations' && (
-            <div>
-              <h4 className="fw-bold mb-4" style={{color: colors.dark}}>
-                📅 Gestion des Réservations
-              </h4>
-              <div className="card border-0 shadow-sm p-3 mb-4"
-                   style={{borderRadius: '15px'}}>
-                <div className="row g-3">
-                  <div className="col-md-4">
-                    <input type="text" className="form-control"
-                           placeholder="🔍 Rechercher un client..."
-                           style={{borderRadius: '10px'}}/>
-                  </div>
-                  <div className="col-md-3">
-                    <select className="form-select"
-                            style={{borderRadius: '10px'}}>
-                      <option value="">Tous les statuts</option>
-                      <option value="confirmee">Confirmée</option>
-                      <option value="en_attente">En attente</option>
-                      <option value="annulee">Annulée</option>
-                    </select>
-                  </div>
-                  <div className="col-md-3">
-                    <input type="date" className="form-control"
-                           style={{borderRadius: '10px'}}/>
-                  </div>
-                </div>
-              </div>
-              <div className="card border-0 shadow-sm"
-                   style={{borderRadius: '15px'}}>
-                <div className="card-body p-0">
-                  <div className="table-responsive">
-                    <table className="table table-hover mb-0">
-                      <thead style={{backgroundColor: '#F8F9FA'}}>
-                        <tr>
-                          <th>#</th>
-                          <th>Client</th>
-                          <th>Formule</th>
-                          <th>Date</th>
-                          <th>Enfants</th>
-                          <th>Accomp.</th>
-                          <th>Montant</th>
-                          <th>Statut</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {reservations.length === 0 ? (
-                          <tr>
-                            <td colSpan="9"
-                                className="text-center text-muted py-3">
-                              Aucune réservation
-                            </td>
-                          </tr>
-                        ) : (
-                          reservations.map((res) => (
-                            <tr key={res.id}>
-                              <td>#{res.id}</td>
-                              <td className="fw-semibold">
-                                {res.client_nom}
-                              </td>
-                              <td>{res.formule_nom}</td>
-                              <td>{res.date_reservation
-                                ? new Date(res.date_reservation)
-                                    .toLocaleDateString('fr-FR')
-                                : ''}
-                              </td>
-                              <td>{res.nombre_enfants}</td>
-                              <td>{res.nombre_accompagnateurs}</td>
-                              <td className="fw-bold"
-                                  style={{color: colors.primary}}>
-                                {parseFloat(res.montant_total || 0)
-                                  .toLocaleString()} F
-                              </td>
-                              <td>{getStatutBadge(res.statut)}</td>
-                              <td>
-                                <button
-                                  className="btn btn-sm btn-outline-primary me-1"
-                                  style={{borderRadius: '8px'}}>
-                                  👁️
-                                </button>
-                                <button
-                                  className="btn btn-sm btn-outline-danger"
-                                  style={{borderRadius: '8px'}}>
-                                  🗑️
-                                </button>
-                              </td>
-                            </tr>
-                          ))
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+  <div>
+    <h4 className="fw-bold mb-4" style={{ color: colors.dark }}>
+      📅 Gestion des Réservations
+    </h4>
+    <div className="card border-0 shadow-sm p-3 mb-4"
+      style={{ borderRadius: '15px' }}>
+      <div className="row g-3">
+        <div className="col-md-4">
+          <input type="text" className="form-control"
+            placeholder="🔍 Rechercher..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ borderRadius: '10px' }} />
+        </div>
+        <div className="col-md-3">
+          <select className="form-select"
+            value={filterStatut}
+            onChange={(e) => setFilterStatut(e.target.value)}
+            style={{ borderRadius: '10px' }}>
+            <option value="">Tous les statuts</option>
+            <option value="confirmee">Confirmée</option>
+            <option value="en_attente">En attente</option>
+            <option value="annulee">Annulée</option>
+          </select>
+        </div>
+        <div className="col-md-3">
+          <input type="date" className="form-control"
+            value={filterDate}
+            onChange={(e) => setFilterDate(e.target.value)}
+            style={{ borderRadius: '10px' }} />
+        </div>
+      </div>
+    </div>
+    <div className="card border-0 shadow-sm"
+      style={{ borderRadius: '15px' }}>
+      <div className="card-body p-0">
+        <div className="table-responsive">
+          <table className="table table-hover mb-0">
+            <thead style={{ backgroundColor: '#F8F9FA' }}>
+              <tr>
+                <th>#</th>
+                <th>Client</th>
+                <th>Formule</th>
+                <th>Date</th>
+                <th>Enfants</th>
+                <th>Accomp.</th>
+                <th>Montant</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reservationsFiltrees.length === 0 ? (
+                <tr>
+                  <td colSpan="9"
+                    className="text-center text-muted py-3">
+                    Aucune réservation
+                  </td>
+                </tr>
+              ) : (
+                reservationsFiltrees.map((res) => (
+                  <tr key={res.id}>
+                    <td>#{res.id}</td>
+                    <td className="fw-semibold">
+                      {res.client_nom}
+                    </td>
+                    <td>{res.formule_nom}</td>
+                    <td>{res.date_reservation
+                      ? new Date(res.date_reservation)
+                        .toLocaleDateString('fr-FR')
+                      : ''}
+                    </td>
+                    <td>{res.nombre_enfants}</td>
+                    <td>{res.nombre_accompagnateurs}</td>
+                    <td className="fw-bold"
+                      style={{ color: colors.primary }}>
+                      {parseFloat(res.montant_total || 0)
+                        .toLocaleString()} F
+                    </td>
+                    <td>{getStatutBadge(res.statut)}</td>
+                    <td>
+                      <button
+                        className="btn btn-sm btn-outline-success me-1"
+                        style={{ borderRadius: '8px' }}>
+                        ✅
+                      </button>
+                      <button
+                        className="btn btn-sm btn-outline-warning me-1"
+                        style={{ borderRadius: '8px' }}>
+                        ✏️
+                      </button>
+                      <button
+                        className="btn btn-sm btn-outline-danger"
+                        style={{ borderRadius: '8px' }}>
+                        ❌
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
           {activeMenu === 'utilisateurs' && (
             <div>
