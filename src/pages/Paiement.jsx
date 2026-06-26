@@ -746,22 +746,36 @@ const Paiement = () => {
       </div>
 
       {/* BOUTON J'AI PAYÉ */}
-      <div className="d-flex gap-2 mb-2">
-        <button
-          className="btn fw-bold flex-fill py-2"
-          style={{
-            backgroundColor: colors.green,
-            color: 'white',
-            borderRadius: '10px',
-            border: 'none'
-          }}
-          onClick={() => {
-            setWaveModal(false);
-            setSuccess(true);
-          }}>
-          ✅ J'ai payé
-        </button>
-      </div>
+      <button
+  className="btn fw-bold flex-fill py-2"
+  style={{
+    backgroundColor: colors.green,
+    color: 'white',
+    borderRadius: '10px',
+    border: 'none'
+  }}
+  onClick={async () => {
+    try {
+      await paiementAPI.creer({
+        reservation_id: donnees.reservationId,
+        methode_paiement: 'wave',
+        mode_paiement: 'en_ligne',
+        montant: Number(montantPaye),
+        is_acompte: Number(montantPaye) < montantTotal,
+        numero_mobile: formData.numeroMobile || ''
+      });
+      setWaveModal(false);
+      setSuccess(true);
+    } catch (error) {
+      setErrors({
+        methode: error.response?.data?.error ||
+          'Erreur lors de l\'enregistrement du paiement'
+      });
+      setWaveModal(false);
+    }
+  }}>
+  ✅ J'ai payé
+</button>
 
       <button
         className="btn btn-link text-muted small"
