@@ -327,131 +327,98 @@ const Caissier = () => {
                 ))}
               </div>
 
-              {/* RÉSERVATIONS EN ATTENTE */}
-              <div className="card border-0 shadow-sm mb-4"
-                style={{ borderRadius: '15px' }}>
-                <div className="card-header bg-white py-3"
-                  style={{ borderRadius: '15px 15px 0 0' }}>
-                  <h6 className="fw-bold mb-0"
-                    style={{ color: colors.dark }}>
-                    ⏳ Réservations en attente de paiement
-                  </h6>
-                </div>
-                <div className="card-body p-0">
-                  <div className="table-responsive">
-                    <table className="table table-hover mb-0">
-                      <thead style={{ backgroundColor: '#F8F9FA' }}>
-                        <tr>
-                          <th>Client</th>
-                          <th>Formule</th>
-                          <th>Enfants</th>
-                          <th>Accomp.</th>
-                          <th>Montant</th>
-                          <th>Actions</th>
-                          <th>Mode</th>
-                          <th>Methode</th>
-
-                        </tr>
-                      </thead>
-                      <tbody>
-
-                        {reservationsDuJour
-                          .filter(r => r.statut === 'en_attente')
-                          .map((res) => (
-                            <tr key={res.id}>
-                              <td className="fw-semibold">
-                                {res.client_nom}
-                              </td>
-                              <tr key={res.id}>
-                                <td>#{res.id}</td>
-                                <td className="fw-semibold">{res.client_nom}</td>
-                                <td>{res.formule_nom}</td>
-                                <td>{res.nombre_enfants}</td>
-                                <td>
-                                  {res.nombre_accompagnateurs}
-                                  <small className="text-success d-block">
-                                    🥤 Boisson offerte
-                                  </small>
-                                </td>
-                                <td className="fw-bold"
-                                  style={{ color: colors.primary }}>
-                                  {parseFloat(res.montant_total || 0)
-                                    .toLocaleString()} F
-                                </td>
-                                <td>{getModePaiementBadge(res.mode_paiement)}</td>
-                                <td>{getMethodePaiementBadge(res.methode_paiement)}</td>
-                                <td>
-                                  {res.statut === 'en_attente' &&
-                                    res.mode_paiement !== 'en_ligne' && (
-                                      <button
-                                        className="btn btn-sm fw-bold me-1"
-                                        style={{
-                                          backgroundColor: colors.green,
-                                          color: 'white',
-                                          borderRadius: '8px'
-                                        }}
-                                        onClick={() => handleEncaisser(res.id)}>
-                                        💵 Encaisser
-                                      </button>
-                                    )}
-                                  {res.statut === 'en_attente' && (
-                                    <button
-                                      className="btn btn-sm btn-outline-danger"
-                                      style={{ borderRadius: '8px' }}
-                                      onClick={() => handleAnnuler(res.id)}>
-                                      ❌
-                                    </button>
-                                  )}
-                                  {res.statut === 'confirmee' && (
-                                    <button
-                                      className="btn btn-sm btn-outline-primary"
-                                      style={{ borderRadius: '8px' }}
-                                      onClick={() => window.print()}>
-                                      🖨️ Reçu
-                                    </button>
-                                  )}
-                                </td>
-                              </tr>
-                              <td>{res.formule_nom}</td>
-                              <td>{res.nombre_enfants}</td>
-                              <td>
-                                {res.nombre_accompagnateurs}
-                                <small className="text-success d-block">
-                                  🥤 Boisson offerte
-                                </small>
-                              </td>
-                              <td className="fw-bold"
-                                style={{ color: colors.primary }}>
-                                {parseFloat(res.montant_total || 0)
-                                  .toLocaleString()} F
-                              </td>
-                              <td>
-                                <button
-                                  className="btn btn-sm fw-bold me-1"
-                                  style={{
-                                    backgroundColor: colors.green,
-                                    color: 'white',
-                                    borderRadius: '8px'
-                                  }}
-                                  onClick={() => handleEncaisser(res.id, res.montant_total)}>
-                                  💵 Encaisser
-                                </button>
-                                <button
-                                  className="btn btn-sm btn-outline-danger"
-                                  style={{ borderRadius: '8px' }}>
-                                  ❌
-                                </button>
-                              </td>
-                            </tr>
-
-                          ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+             {/* RÉSERVATIONS EN ATTENTE */}
+<div className="card border-0 shadow-sm mb-4"
+  style={{ borderRadius: '15px' }}>
+  <div className="card-header bg-white py-3"
+    style={{ borderRadius: '15px 15px 0 0' }}>
+    <h6 className="fw-bold mb-0"
+      style={{ color: colors.dark }}>
+      ⏳ Réservations en attente de paiement
+    </h6>
+  </div>
+  <div className="card-body p-0">
+    <div className="table-responsive">
+      <table className="table table-hover mb-0">
+        <thead style={{ backgroundColor: '#F8F9FA' }}>
+          <tr>
+            <th>#</th>
+            <th>Client</th>
+            <th>Formule</th>
+            <th>Enfants</th>
+            <th>Accomp.</th>
+            <th>Montant</th>
+            <th>Mode</th>
+            <th>Méthode</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {reservationsDuJour
+            .filter(r => r.statut === 'en_attente')
+            .length === 0 ? (
+              <tr>
+                <td colSpan="9"
+                  className="text-center text-muted py-3">
+                  Aucune réservation en attente
+                </td>
+              </tr>
+            ) : (
+              reservationsDuJour
+                .filter(r => r.statut === 'en_attente')
+                .map((res) => (
+                  <tr key={res.id}>
+                    <td>#{res.id}</td>
+                    <td className="fw-semibold">
+                      {res.client_nom}
+                    </td>
+                    <td>{res.formule_nom}</td>
+                    <td>{res.nombre_enfants}</td>
+                    <td>
+                      {res.nombre_accompagnateurs}
+                      <small className="text-success d-block">
+                        🥤 Boisson offerte
+                      </small>
+                    </td>
+                    <td className="fw-bold"
+                      style={{ color: colors.primary }}>
+                      {parseFloat(res.montant_total || 0)
+                        .toLocaleString()} F
+                    </td>
+                    <td>
+                      {getModePaiementBadge(res.mode_paiement)}
+                    </td>
+                    <td>
+                      {getMethodePaiementBadge(res.methode_paiement)}
+                    </td>
+                    <td>
+                      {res.mode_paiement !== 'en_ligne' && (
+                        <button
+                          className="btn btn-sm fw-bold me-1"
+                          style={{
+                            backgroundColor: colors.green,
+                            color: 'white',
+                            borderRadius: '8px'
+                          }}
+                          onClick={() => handleEncaisser(res.id)}>
+                          💵 Encaisser
+                        </button>
+                      )}
+                      <button
+                        className="btn btn-sm btn-outline-danger"
+                        style={{ borderRadius: '8px' }}
+                        onClick={() => handleAnnuler(res.id)}>
+                        ❌
+                      </button>
+                    </td>
+                  </tr>
+                ))
+            )}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
           {/* RÉSERVATIONS DU JOUR */}
           {activeMenu === 'reservations' && (
