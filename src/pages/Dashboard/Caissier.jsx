@@ -247,8 +247,7 @@ const Caissier = () => {
             <hr style={{ borderColor: '#444', margin: '20px 10px' }} />
             <Link
               to="/"
-              className="px-3 py-2 mb-1 mx-2 rounded d-block
-                         text-decoration-none"
+              className="px-3 py-2 mb-1 mx-2 rounded d-block text-decoration-none"
               style={{ color: '#ccc' }}>
               <span className="me-2">🌐</span>
               <span className="fw-semibold">Voir le site</span>
@@ -419,7 +418,8 @@ const Caissier = () => {
     </div>
   </div>
 </div>
-
+</div>
+          )}
           {/* RÉSERVATIONS DU JOUR */}
           {activeMenu === 'reservations' && (
             <div>
@@ -731,8 +731,7 @@ const Caissier = () => {
                   borderRadius: '15px',
                   borderLeft: `5px solid ${colors.green}`
                 }}>
-                <div className="d-flex justify-content-between
-                                align-items-center">
+                <div className="d-flex justify-content-between align-items-center">
                   <span className="fw-bold fs-6">
                     Total encaissé
                   </span>
