@@ -32,30 +32,22 @@ const Caissier = () => {
   const [encaissementSuccess, setEncaissementSuccess] = useState(false);
   const [encaissementError, setEncaissementError] = useState('');
 
-  const handleEncaisser = async (reservationId, montant) => {
-    const methode = window.prompt(
-      'Méthode de paiement ?\n1. especes\n2. orange_money\n3. wave',
-      'especes'
-    );
-    if (!methode) return;
-
-    try {
-      await caissierAPI.encaisser({
-        reservation_id: reservationId,
-        methode_paiement: methode,
-        mode_paiement: 'sur_place'
-      });
-      alert('✅ Paiement encaissé avec succès !');
-      const [resResponse, paiResponse] = await Promise.all([
-        caissierAPI.reservationsDuJour(),
-        caissierAPI.tousPaiements()
-      ]);
-      setReservationsDuJour(resResponse.data);
-      setPaiementsEffectues(paiResponse.data);
-    } catch (error) {
-      alert('❌ Erreur: ' + (error.response?.data?.error || 'Erreur encaissement'));
-    }
-  };
+  const handleEncaisser = async (id) => {
+  try {
+    await caissierAPI.encaisser({
+      reservation_id: id,
+      methode_paiement: 'especes',
+      mode_paiement: 'sur_place'
+    });
+    alert('✅ Paiement encaissé avec succès !');
+    chargerDonnees();
+  } catch (error) {
+    alert('❌ ' + (
+      error.response?.data?.error ||
+      'Erreur lors de l\'encaissement'
+    ));
+  }
+};
   useEffect(() => {
     const chargerReservations = async () => {
       try {
@@ -354,7 +346,8 @@ const Caissier = () => {
         </thead>
         <tbody>
           {reservationsDuJour
-            .filter(r => r.statut === 'en_attente')
+            .filter(r => r.statut === 'en_attente' &&
+                   r.mode_paiement === 'sur_place')
             .length === 0 ? (
               <tr>
                 <td colSpan="9"
@@ -364,7 +357,9 @@ const Caissier = () => {
               </tr>
             ) : (
               reservationsDuJour
-                .filter(r => r.statut === 'en_attente')
+                .filter(r => r.statut === 'en_attente' &&
+                         r.mode_paiement === 'sur_place')
+
                 .map((res) => (
                   <tr key={res.id}>
                     <td>#{res.id}</td>
