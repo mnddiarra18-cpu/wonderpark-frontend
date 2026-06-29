@@ -386,18 +386,6 @@ const Caissier = () => {
                       {getMethodePaiementBadge(res.methode_paiement)}
                     </td>
                     <td>
-                      {res.mode_paiement !== 'en_ligne' && (
-                        <button
-                          className="btn btn-sm fw-bold me-1"
-                          style={{
-                            backgroundColor: colors.green,
-                            color: 'white',
-                            borderRadius: '8px'
-                          }}
-                          onClick={() => handleEncaisser(res.id)}>
-                          💵 Encaisser
-                        </button>
-                      )}
                       <button
                         className="btn btn-sm btn-outline-danger"
                         style={{ borderRadius: '8px' }}
