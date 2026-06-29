@@ -262,7 +262,7 @@ const Caissier = () => {
               <div className="row g-3 mb-4">
                 {[
                   {
-                    titre: 'Réservations du jour',
+                    titre: 'Réservations',
                     valeur: reservationsDuJour.length,
                     icon: '📅',
                     couleur: colors.blue
