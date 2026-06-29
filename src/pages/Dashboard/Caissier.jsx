@@ -401,7 +401,7 @@ const Caissier = () => {
           {activeMenu === 'reservations' && (
             <div>
               <h4 className="fw-bold mb-4" style={{ color: colors.dark }}>
-                📅 Réservations du jour
+                📅 Toutes lesRéservations 
               </h4>
               <div className="card border-0 shadow-sm" style={{ borderRadius: '15px' }}>
                 <div className="card-body p-0">
