@@ -341,7 +341,6 @@ const Caissier = () => {
             <th>Montant</th>
             <th>Mode</th>
             <th>Méthode</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -386,12 +385,7 @@ const Caissier = () => {
                       {getMethodePaiementBadge(res.methode_paiement)}
                     </td>
                     <td>
-                      <button
-                        className="btn btn-sm btn-outline-danger"
-                        style={{ borderRadius: '8px' }}
-                        onClick={() => handleAnnuler(res.id)}>
-                        ❌
-                      </button>
+                      
                     </td>
                   </tr>
                 ))
