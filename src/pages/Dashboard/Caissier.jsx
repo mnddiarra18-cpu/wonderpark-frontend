@@ -397,11 +397,11 @@ const Caissier = () => {
 </div>
 </div>
           )}
-          {/* RÉSERVATIONS DU JOUR */}
+          {/* RÉSERVATIONS */}
           {activeMenu === 'reservations' && (
             <div>
               <h4 className="fw-bold mb-4" style={{ color: colors.dark }}>
-                📅 Toutes lesRéservations 
+                📅 Toutes les Réservations 
               </h4>
               <div className="card border-0 shadow-sm" style={{ borderRadius: '15px' }}>
                 <div className="card-body p-0">
